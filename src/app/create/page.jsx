@@ -1,0 +1,649 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Cake,
+  Upload,
+  Trash2,
+  Eye,
+  ArrowLeft,
+  Sparkles,
+  Music,
+  Palette,
+  Heart,
+  FileText,
+  Camera,
+  CheckCircle,
+  X,
+  Plus,
+} from "lucide-react";
+import BirthdayView from "@/app/components/BirthdayView";
+
+const THEME_PRESETS = [
+  { name: "Pink & Purple", primary: "#ec4899", secondary: "#a855f7", bg: "#090514" },
+  { name: "Blue & Purple", primary: "#3b82f6", secondary: "#8b5cf6", bg: "#030712" },
+  { name: "Red & Gold", primary: "#ef4444", secondary: "#eab308", bg: "#0a0505" },
+  { name: "Midnight", primary: "#6366f1", secondary: "#ec4899", bg: "#020617" },
+  { name: "Sunset", primary: "#f97316", secondary: "#ec4899", bg: "#0f050d" },
+];
+
+export default function CreateBirthdayPage() {
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    nickname: "",
+    slug: "",
+    birthdayDate: new Date().toISOString().split("T")[0],
+    age: 24,
+    title: "Time to Celebrate!",
+    subtitle: "The countdown is over... Let's celebrate! 🎉",
+    welcomeMessage: "🎉 It's your special day! 🎉",
+    celebrationMessage: "Click to start the magic! ✨",
+    letter: {
+      greeting: "My Dearest Friend,",
+      content:
+        "On this very special day, I want you to know how incredibly grateful I am to have you in my life. Your birthday isn't just a celebration of another year - it's a celebration of all the joy, laughter, and beautiful memories you bring to this world.\n\nYou have this amazing ability to light up any room you enter, to make people smile even on their darkest days, and to spread kindness wherever you go.\n\nHappy Birthday, beautiful soul! 🎂✨",
+      closing: "With all my love,",
+      signature: "Your Friend 💕",
+    },
+    photos: [],
+    music: {
+      enabled: true,
+      url: "",
+    },
+    theme: {
+      themeName: "Pink & Purple",
+      primaryColor: "#ec4899",
+      secondaryColor: "#a855f7",
+      backgroundColor: "#090514",
+    },
+    effects: {
+      confetti: true,
+      hearts: true,
+      fireworks: true,
+      particles: true,
+    },
+  });
+
+  const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+
+  // Auto-generate slug when name changes if slug wasn't manually edited
+  const handleNameChange = (e) => {
+    const val = e.target.value;
+    const generatedSlug = val.toLowerCase().trim().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
+    setFormData((prev) => ({
+      ...prev,
+      name: val,
+      slug: prev.slug === "" || prev.slug === prev.name.toLowerCase().replace(/[^a-z0-9]/g, "-") ? generatedSlug : prev.slug,
+    }));
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setUploading(true);
+    setError("");
+
+    try {
+      const uploadedPhotos = [];
+
+      for (const file of files) {
+        const data = new FormData();
+        data.append("file", file);
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: data,
+        });
+
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error || "Upload failed");
+
+        uploadedPhotos.push({
+          url: result.url,
+          caption: `Memory with ${formData.name || "you"}`,
+          order: formData.photos.length + uploadedPhotos.length,
+        });
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        photos: [...prev.photos, ...uploadedPhotos],
+      }));
+    } catch (err) {
+      setError(err.message || "Failed to upload images");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removePhoto = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      photos: prev.photos.filter((_, i) => i !== index),
+    }));
+  };
+
+  const updateCaption = (index, caption) => {
+    setFormData((prev) => {
+      const updated = [...prev.photos];
+      updated[index].caption = caption;
+      return { ...prev, photos: updated };
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!formData.name || !formData.birthdayDate || !formData.slug) {
+      setError("Please fill in Name, Birthday Date, and URL slug.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/birthdays", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to create birthday website");
+      }
+
+      router.push(`/dashboard`);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-black to-purple-950 text-white relative p-4 sm:p-8 overflow-x-hidden">
+      {/* Glow */}
+      <div className="fixed inset-0 z-0 blur-[150px] opacity-15 pointer-events-none bg-gradient-to-br from-pink-500 via-purple-600 to-indigo-500" />
+
+      <div className="max-w-4xl mx-auto relative z-10">
+        {/* Navigation */}
+        <div className="flex items-center justify-between gap-4 mb-8 pb-4 border-b border-white/10">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 text-purple-200 hover:text-pink-400 text-sm font-medium transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Dashboard</span>
+          </Link>
+
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setShowPreview(true)}
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-purple-200 border border-white/20 px-4 py-2.5 rounded-full font-medium transition-all text-sm hover:scale-105"
+            >
+              <Eye className="w-4 h-4 text-pink-400" />
+              <span>Preview Experience</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="text-center mb-10">
+          <div className="w-14 h-14 bg-gradient-to-tr from-pink-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+            <Cake className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400">
+            Create Birthday Website
+          </h1>
+          <p className="text-purple-300/80 text-sm mt-1">
+            Build a unique personalized celebration link for your loved one
+          </p>
+        </div>
+
+        {error && (
+          <div className="mb-8 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* SECTION 1: BASIC INFORMATION */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
+            <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
+              <Sparkles className="w-5 h-5" />
+              <span>Basic Information</span>
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Birthday Person's Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={handleNameChange}
+                  placeholder="Rahul / Ankita"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Nickname (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={formData.nickname}
+                  onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+                  placeholder="Paaji / Champ"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Custom URL Slug *
+                </label>
+                <div className="flex items-center bg-white/5 border border-white/10 rounded-2xl overflow-hidden focus-within:border-pink-500/60">
+                  <span className="bg-white/5 px-3 py-3 text-xs text-purple-300/60 border-r border-white/10 font-mono">
+                    /b/
+                  </span>
+                  <input
+                    type="text"
+                    required
+                    value={formData.slug}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"),
+                      })
+                    }
+                    placeholder="rahul"
+                    className="w-full bg-transparent py-3 px-3 text-white placeholder-purple-300/30 focus:outline-none text-sm font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Birthday Date *
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={formData.birthdayDate}
+                  onChange={(e) => setFormData({ ...formData, birthdayDate: e.target.value })}
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 2: WELCOME SECTION */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
+            <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
+              <Cake className="w-5 h-5" />
+              <span>Welcome & Celebration Screen</span>
+            </h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Celebration Title
+                </label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  placeholder="Time to Celebrate!"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Subtitle Message
+                </label>
+                <input
+                  type="text"
+                  value={formData.subtitle}
+                  onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+                  placeholder="The countdown is over... Let's celebrate! 🎉"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Welcome Banner Text
+                </label>
+                <input
+                  type="text"
+                  value={formData.welcomeMessage}
+                  onChange={(e) => setFormData({ ...formData, welcomeMessage: e.target.value })}
+                  placeholder="🎉 It's your special day! 🎉"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 3: MEMORIES & PHOTOS */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
+            <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
+              <Camera className="w-5 h-5" />
+              <span>Memories & Photo Gallery</span>
+            </h2>
+
+            <div>
+              <label className="block text-sm font-medium text-purple-200 mb-3">
+                Upload Memory Photos (Cloudinary)
+              </label>
+
+              <div className="border-2 border-dashed border-white/20 hover:border-pink-500/50 rounded-3xl p-6 text-center transition-all bg-white/[0.02]">
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  disabled={uploading}
+                  className="hidden"
+                  id="photo-upload-input"
+                />
+                <label
+                  htmlFor="photo-upload-input"
+                  className="cursor-pointer flex flex-col items-center justify-center gap-2"
+                >
+                  <div className="w-12 h-12 bg-pink-500/10 border border-pink-500/30 rounded-2xl flex items-center justify-center text-pink-400">
+                    <Upload className="w-6 h-6" />
+                  </div>
+                  <span className="text-sm font-medium text-purple-200">
+                    {uploading ? "Uploading to Cloudinary..." : "Click to select or drop photos here"}
+                  </span>
+                  <span className="text-xs text-purple-300/50">Supports JPG, PNG, WebP up to 10MB</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Photo List */}
+            {formData.photos.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                {formData.photos.map((photo, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-black/30 border border-white/10 p-3 rounded-2xl flex items-center gap-4 relative group"
+                  >
+                    <img
+                      src={photo.url}
+                      alt="Upload preview"
+                      className="w-16 h-16 object-cover rounded-xl shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <input
+                        type="text"
+                        value={photo.caption}
+                        onChange={(e) => updateCaption(idx, e.target.value)}
+                        placeholder="Add caption..."
+                        className="w-full bg-white/5 border border-white/10 rounded-xl py-1.5 px-3 text-xs text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(idx)}
+                      className="p-2 text-gray-400 hover:text-red-400 transition-colors"
+                      title="Remove photo"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* SECTION 4: SPECIAL LETTER */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
+            <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              <span>Special Heartfelt Letter</span>
+            </h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">Greeting</label>
+                <input
+                  type="text"
+                  value={formData.letter.greeting}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      letter: { ...formData.letter, greeting: e.target.value },
+                    })
+                  }
+                  placeholder="My Dearest Friend,"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Letter Body Message
+                </label>
+                <textarea
+                  rows={5}
+                  value={formData.letter.content}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      letter: { ...formData.letter, content: e.target.value },
+                    })
+                  }
+                  placeholder="Write your emotional message..."
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm leading-relaxed"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-purple-200 mb-2">Closing</label>
+                  <input
+                    type="text"
+                    value={formData.letter.closing}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        letter: { ...formData.letter, closing: e.target.value },
+                      })
+                    }
+                    placeholder="With all my love,"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
+                    Signature
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.letter.signature}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        letter: { ...formData.letter, signature: e.target.value },
+                      })
+                    }
+                    placeholder="Your Friend 💕"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 5: MUSIC & THEME & EFFECTS */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
+            <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
+              <Palette className="w-5 h-5" />
+              <span>Theme, Music & Effects</span>
+            </h2>
+
+            {/* Themes */}
+            <div>
+              <label className="block text-sm font-medium text-purple-200 mb-3">Preset Themes</label>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                {THEME_PRESETS.map((t) => (
+                  <button
+                    key={t.name}
+                    type="button"
+                    onClick={() =>
+                      setFormData({
+                        ...formData,
+                        theme: {
+                          themeName: t.name,
+                          primaryColor: t.primary,
+                          secondaryColor: t.secondary,
+                          backgroundColor: t.bg,
+                        },
+                      })
+                    }
+                    className={`p-3 rounded-2xl border transition-all text-xs font-semibold text-center flex flex-col items-center gap-2 ${
+                      formData.theme.themeName === t.name
+                        ? "border-pink-500 bg-pink-500/20 text-white shadow-lg"
+                        : "border-white/10 bg-white/5 text-purple-300 hover:bg-white/10"
+                    }`}
+                  >
+                    <div
+                      className="w-6 h-6 rounded-full shadow-inner"
+                      style={{
+                        background: `linear-gradient(135deg, ${t.primary}, ${t.secondary})`,
+                      }}
+                    />
+                    <span>{t.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Music Toggle */}
+            <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Music className="w-5 h-5 text-pink-400" />
+                <div>
+                  <div className="text-sm font-medium text-white">Enable Background Music</div>
+                  <div className="text-xs text-purple-300/60">Plays ambient soothing birthday track</div>
+                </div>
+              </div>
+              <input
+                type="checkbox"
+                checked={formData.music.enabled}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    music: { ...formData.music, enabled: e.target.checked },
+                  })
+                }
+                className="w-5 h-5 accent-pink-500 cursor-pointer"
+              />
+            </div>
+
+            {/* Effects Checkboxes */}
+            <div className="pt-4 border-t border-white/10">
+              <label className="block text-sm font-medium text-purple-200 mb-3">
+                Interactive Special Effects
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {[
+                  { key: "confetti", label: "Confetti Burst" },
+                  { key: "hearts", label: "Floating Hearts" },
+                  { key: "fireworks", label: "Fireworks" },
+                  { key: "particles", label: "Glow Particles" },
+                ].map((eff) => (
+                  <label
+                    key={eff.key}
+                    className="flex items-center gap-2 text-xs font-medium text-purple-200 cursor-pointer bg-white/5 border border-white/10 p-3 rounded-2xl hover:bg-white/10 transition-all"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.effects[eff.key]}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          effects: {
+                            ...formData.effects,
+                            [eff.key]: e.target.checked,
+                          },
+                        })
+                      }
+                      className="w-4 h-4 accent-pink-500"
+                    />
+                    <span>{eff.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Form Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-end pt-4">
+            <button
+              type="button"
+              onClick={() => setShowPreview(true)}
+              className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-purple-200 border border-white/20 px-8 py-4 rounded-2xl font-semibold transition-all text-sm hover:scale-[101%]"
+            >
+              <Eye className="w-5 h-5 text-pink-400" />
+              <span>Preview</span>
+            </button>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:to-indigo-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-xl border border-white/20 transition-all hover:scale-[101%] disabled:opacity-50 text-sm"
+            >
+              {loading ? (
+                <span>Creating Birthday Website...</span>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  <span>Create Birthday Website</span>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* LIVE PREVIEW MODAL */}
+      <AnimatePresence>
+        {showPreview && (
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md">
+            <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+              <button
+                onClick={() => setShowPreview(false)}
+                className="bg-black/70 hover:bg-black text-white px-4 py-2 rounded-full border border-white/20 text-xs font-semibold flex items-center gap-2 shadow-xl"
+              >
+                <X className="w-4 h-4" />
+                <span>Exit Preview</span>
+              </button>
+            </div>
+            <BirthdayView birthday={formData} />
+          </div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
