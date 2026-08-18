@@ -4,13 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { User, Mail, Lock, ArrowRight, Cake } from "lucide-react";
+import { User, Mail, Lock, ArrowRight, Cake, Key } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +24,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, inviteCode }),
       });
 
       const data = await res.json();
@@ -58,15 +59,15 @@ export default function RegisterPage() {
             </div>
           </Link>
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400">
-            Create Account
+            Creator Account
           </h1>
           <p className="text-purple-200/70 text-sm mt-1">
-            Start creating personalized birthday surprises in minutes
+            Restricted access for authorized birthday website creators
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm">
+          <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm leading-relaxed">
             {error}
           </div>
         )}
@@ -123,16 +124,32 @@ export default function RegisterPage() {
             </div>
           </div>
 
+          <div>
+            <label className="block text-purple-200 text-sm font-medium mb-2">
+              Access Passcode / Invite Code (If required)
+            </label>
+            <div className="relative">
+              <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
+              <input
+                type="text"
+                value={inviteCode}
+                onChange={(e) => setInviteCode(e.target.value)}
+                placeholder="Required if owner passcode enabled"
+                className="w-full bg-white/5 border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 focus:ring-1 focus:ring-pink-500/60 transition-all text-sm"
+              />
+            </div>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 text-white py-3.5 px-6 rounded-2xl font-semibold shadow-lg border border-white/20 transition-all hover:scale-[101%] disabled:opacity-50 flex items-center justify-center gap-2 mt-6"
           >
             {loading ? (
-              <span>Creating Account...</span>
+              <span>Verifying Access...</span>
             ) : (
               <>
-                <span>Sign Up</span>
+                <span>Create Creator Account</span>
                 <ArrowRight className="w-5 h-5" />
               </>
             )}
@@ -140,7 +157,7 @@ export default function RegisterPage() {
         </form>
 
         <div className="mt-8 text-center text-sm text-purple-200/60">
-          Already have an account?{" "}
+          Already authorized?{" "}
           <Link
             href="/login"
             className="text-pink-400 hover:text-pink-300 font-semibold hover:underline"
