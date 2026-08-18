@@ -9,6 +9,13 @@ import "swiper/css/effect-cube";
 import "swiper/css/pagination";
 
 export default function PhotoGallery({ birthday, onNext }) {
+  const primaryColor = birthday?.theme?.primaryColor || "#ec4899";
+  const secondaryColor = birthday?.theme?.secondaryColor || "#a855f7";
+
+  const gradientStyle = {
+    backgroundImage: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+  };
+
   const defaultPhotos = [
     { id: 1, url: "/images/1.jpeg", caption: `Beautiful moments with ${birthday?.name || "you"}` },
     { id: 2, url: "/images/2.jpeg", caption: "Cherished memories" },
@@ -44,13 +51,19 @@ export default function PhotoGallery({ birthday, onNext }) {
           }}
           transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY }}
         >
-          <Camera className="w-16 h-16 text-pink-400 mx-auto" />
+          <Camera className="w-16 h-16 mx-auto" style={{ color: primaryColor }} />
         </motion.div>
 
-        <h1 className="text-4xl md:text-6xl py-1 md:py-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 mb-4">
+        <h1
+          className="text-4xl md:text-6xl py-1 md:py-2 font-bold text-transparent bg-clip-text mb-4"
+          style={{
+            ...gradientStyle,
+            filter: `drop-shadow(0 0 25px ${primaryColor}66)`,
+          }}
+        >
           Moments with You
         </h1>
-        <p className="text-purple-300 text-lg">
+        <p className="text-purple-200 text-lg">
           Beautiful memories with {birthday?.name || "you"} 📸
         </p>
       </motion.div>
@@ -95,7 +108,8 @@ export default function PhotoGallery({ birthday, onNext }) {
       >
         <button
           onClick={onNext}
-          className="bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:via-purple-500 hover:to-indigo-500 text-white text-lg px-8 py-4 rounded-full shadow-xl border-2 border-white/70 transition-all duration-300 hover:scale-[103%]"
+          style={gradientStyle}
+          className="text-white text-lg px-8 py-4 rounded-full shadow-xl border-2 border-white/70 transition-all duration-300 hover:scale-[103%]"
         >
           <motion.div className="flex items-center space-x-2" whileHover={{ x: 5 }}>
             <span>One Last Thing</span>

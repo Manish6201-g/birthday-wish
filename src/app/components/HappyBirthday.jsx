@@ -11,6 +11,13 @@ export default function HappyBirthday({ birthday, onNext }) {
   const nickname = birthday?.nickname || name;
   const welcomeMessage = birthday?.welcomeMessage || "🎉 It's your special day! 🎉";
 
+  const primaryColor = birthday?.theme?.primaryColor || "#ec4899";
+  const secondaryColor = birthday?.theme?.secondaryColor || "#a855f7";
+
+  const gradientStyle = {
+    backgroundImage: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+  };
+
   useEffect(() => {
     const updateBalloonCount = () => {
       setBalloonCount(window.innerWidth >= 768 ? 20 : 5);
@@ -111,8 +118,13 @@ export default function HappyBirthday({ birthday, onNext }) {
         </div>
 
         {/* Top layer */}
-        <div className="w-20 h-10 bg-gradient-to-b from-purple-200 to-purple-400 rounded-xl relative mx-auto -mt-1 shadow-lg">
-          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-300 to-indigo-400 rounded-t-xl" />
+        <div
+          className="w-20 h-10 rounded-xl relative mx-auto -mt-1 shadow-lg"
+          style={{
+            background: `linear-gradient(to bottom, ${primaryColor}dd, ${secondaryColor}dd)`,
+          }}
+        >
+          <div className="absolute top-0 left-0 right-0 h-2 bg-white/30 rounded-t-xl" />
           {[...Array(2)].map((_, i) => (
             <div
               key={i}
@@ -123,8 +135,13 @@ export default function HappyBirthday({ birthday, onNext }) {
         </div>
 
         {/* Middle layer */}
-        <div className="w-28 h-12 bg-gradient-to-b from-pink-200 to-pink-400 rounded-xl relative mx-auto -mt-2 shadow-lg">
-          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-purple-300 to-purple-400 rounded-t-xl" />
+        <div
+          className="w-28 h-12 rounded-xl relative mx-auto -mt-2 shadow-lg"
+          style={{
+            background: `linear-gradient(to bottom, ${primaryColor}, ${secondaryColor})`,
+          }}
+        >
+          <div className="absolute top-0 left-0 right-0 h-2 bg-white/40 rounded-t-xl" />
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
@@ -136,7 +153,7 @@ export default function HappyBirthday({ birthday, onNext }) {
 
         {/* Bottom layer */}
         <div className="w-36 h-14 bg-gradient-to-b from-yellow-200 to-yellow-400 rounded-xl relative mx-auto -mt-1 shadow-lg">
-          <div className="absolute top-0 left-0 right-0 h-3 bg-gradient-to-r from-pink-300 to-pink-400 rounded-t-xl" />
+          <div className="absolute top-0 left-0 right-0 h-3 bg-white/40 rounded-t-xl" />
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
@@ -200,7 +217,11 @@ export default function HappyBirthday({ birthday, onNext }) {
         </div>
 
         <motion.h1
-          className="text-5xl md:text-7xl py-1.5 md:py-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 mb-4 relative z-10"
+          className="text-5xl md:text-7xl py-1.5 md:py-2 font-bold text-transparent bg-clip-text mb-4 relative z-10"
+          style={{
+            ...gradientStyle,
+            filter: `drop-shadow(0 0 25px ${primaryColor}88)`,
+          }}
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
@@ -209,7 +230,8 @@ export default function HappyBirthday({ birthday, onNext }) {
         </motion.h1>
 
         <motion.h2
-          className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 mb-6 relative z-10"
+          className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text mb-6 relative z-10"
+          style={gradientStyle}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.3 }}
@@ -219,7 +241,7 @@ export default function HappyBirthday({ birthday, onNext }) {
         </motion.h2>
 
         <motion.div
-          className="text-xl md:text-2xl text-purple-300 mb-8 relative z-10"
+          className="text-xl md:text-2xl text-purple-200 mb-8 relative z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
@@ -239,7 +261,8 @@ export default function HappyBirthday({ birthday, onNext }) {
       >
         <button
           onClick={onNext}
-          className="bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:via-purple-500 hover:to-indigo-500 text-white text-xl px-8 py-4 rounded-full shadow-xl border-2 border-white/70 transition-all duration-300 hover:scale-[103%]"
+          style={gradientStyle}
+          className="text-white text-xl px-8 py-4 rounded-full shadow-xl border-2 border-white/70 transition-all duration-300 hover:scale-[103%]"
         >
           <motion.div className="flex items-center space-x-2" whileHover={{ x: 5 }}>
             <span>See Our Moments</span>

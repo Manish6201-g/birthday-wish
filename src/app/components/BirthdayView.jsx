@@ -18,7 +18,6 @@ export default function BirthdayView({ birthday }) {
   const bDate = birthday?.birthdayDate ? new Date(birthday.birthdayDate) : new Date();
   const [isBirthdayOver, setIsBirthdayOver] = useState(() => {
     const now = new Date();
-    // Compare month and day
     return (
       now.getMonth() === bDate.getMonth() && now.getDate() === bDate.getDate()
     ) || now.getTime() >= bDate.getTime();
@@ -58,33 +57,36 @@ export default function BirthdayView({ birthday }) {
     <Letter key="letter" birthday={birthday} />,
   ];
 
-  // Theme styling overrides if custom theme provided
-  const bgGradient = birthday?.theme?.backgroundColor
-    ? `radial-gradient(circle at 50% 50%, ${birthday.theme.primaryColor || '#ec4899'}22, transparent 60%)`
-    : null;
+  // Dynamic Theme Colors
+  const primaryColor = birthday?.theme?.primaryColor || "#ec4899";
+  const secondaryColor = birthday?.theme?.secondaryColor || "#a855f7";
+  const backgroundColor = birthday?.theme?.backgroundColor || "#090514";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-950/30 via-black to-purple-950/30 overflow-hidden relative">
-      {/* Dynamic Background Gradients */}
+    <div
+      className="min-h-screen overflow-hidden relative transition-colors duration-700"
+      style={{
+        backgroundColor: backgroundColor,
+        backgroundImage: `radial-gradient(ellipse at top, ${backgroundColor}, #000000)`,
+      }}
+    >
+      {/* Dynamic Background Radial Gradients */}
       <div
-        className="fixed inset-0 z-0 blur-[120px] opacity-20"
+        className="fixed inset-0 z-0 blur-[130px] opacity-30 pointer-events-none transition-all duration-700"
         style={{
-          backgroundImage:
-            bgGradient ||
-            "radial-gradient(circle at 20% 25%, rgba(255, 99, 165, 0.6), transparent 40%)",
+          backgroundImage: `radial-gradient(circle at 20% 25%, ${primaryColor}, transparent 50%)`,
         }}
       />
       <div
-        className="fixed inset-0 z-0 blur-[120px] opacity-20"
+        className="fixed inset-0 z-0 blur-[130px] opacity-30 pointer-events-none transition-all duration-700"
         style={{
-          backgroundImage:
-            "radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.6), transparent 40%)",
+          backgroundImage: `radial-gradient(circle at 80% 80%, ${secondaryColor}, transparent 50%)`,
         }}
       />
 
       <AnimatePresence mode="wait">
         {isLoading ? (
-          <Loader key="loader" />
+          <Loader key="loader" birthday={birthday} />
         ) : (
           <AnimatePresence mode="wait">{screens[currentScreen]}</AnimatePresence>
         )}

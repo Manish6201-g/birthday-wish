@@ -11,6 +11,13 @@ export default function Letter({ birthday }) {
   const [currentText, setCurrentText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
 
+  const primaryColor = birthday?.theme?.primaryColor || "#ec4899";
+  const secondaryColor = birthday?.theme?.secondaryColor || "#a855f7";
+
+  const gradientStyle = {
+    backgroundImage: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+  };
+
   const letterText = useMemo(() => {
     const greeting = birthday?.letter?.greeting || "My Dearest Friend,";
     const content =
@@ -37,7 +44,7 @@ export default function Letter({ birthday }) {
               particleCount: 50,
               spread: 70,
               origin: { y: 0.6 },
-              colors: ["#ff69b4", "#ff1493", "#9370db", "#8a2be2", "#ffd700"],
+              colors: [primaryColor, secondaryColor, "#ffd700"],
             });
           }
         }
@@ -45,7 +52,7 @@ export default function Letter({ birthday }) {
 
       return () => clearInterval(timer);
     }
-  }, [showText, letterText, birthday?.effects]);
+  }, [showText, letterText, birthday?.effects, primaryColor, secondaryColor]);
 
   const handleOpenLetter = () => {
     setIsOpen(true);
@@ -75,10 +82,16 @@ export default function Letter({ birthday }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <h1 className="text-4xl md:text-6xl py-1 md:py-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 mb-4">
+          <h1
+            className="text-4xl md:text-6xl py-1 md:py-2 font-bold text-transparent bg-clip-text mb-4"
+            style={{
+              ...gradientStyle,
+              filter: `drop-shadow(0 0 25px ${primaryColor}66)`,
+            }}
+          >
             A Special Letter
           </h1>
-          <p className="text-lg text-purple-300">
+          <p className="text-lg text-purple-200">
             Just for {birthday?.name || "you"}, on your special day 💌
           </p>
         </motion.div>
@@ -106,20 +119,23 @@ export default function Letter({ birthday }) {
                 exit={{ rotateX: -90, opacity: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="w-80 h-52 bg-gradient-to-br from-pink-200 to-purple-200 rounded-2xl shadow-2xl border-2 border-pink-300 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-26 bg-gradient-to-br from-pink-300 to-purple-300 transform origin-top"></div>
-                  <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-br from-pink-100 to-purple-100"></div>
+                <div
+                  className="w-80 h-52 rounded-2xl shadow-2xl border-2 border-white/40 relative overflow-hidden"
+                  style={gradientStyle}
+                >
+                  <div className="absolute top-0 left-0 w-full h-26 bg-white/20 transform origin-top"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-40 bg-white/10"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Mail className="w-16 h-16 text-pink-500" />
+                    <Mail className="w-16 h-16 text-white" />
                   </div>
                   <div className="absolute top-4 right-4">
-                    <Heart className="w-6 h-6 text-red-500 fill-current" />
+                    <Heart className="w-6 h-6 text-red-400 fill-current" />
                   </div>
                   <div className="absolute bottom-4 left-4">
-                    <Sparkles className="w-6 h-6 text-yellow-500" />
+                    <Sparkles className="w-6 h-6 text-yellow-300" />
                   </div>
                   <motion.div
-                    className="absolute bottom-3 left-1/2 transform -translate-x-1/2 text-pink-700 text-base font-semibold"
+                    className="absolute bottom-3 left-1/2 transform -translate-x-1/2 text-white text-base font-semibold"
                     animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   >

@@ -6,7 +6,14 @@ import confetti from "canvas-confetti";
 import { useEffect } from "react";
 
 export default function Celebration({ birthday, onNext }) {
-  const colors = ["#ff69b4", "#ff1493", "#9370db"];
+  const primaryColor = birthday?.theme?.primaryColor || "#ec4899";
+  const secondaryColor = birthday?.theme?.secondaryColor || "#a855f7";
+
+  const gradientStyle = {
+    backgroundImage: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+  };
+
+  const colors = [primaryColor, secondaryColor, "#ffd700"];
 
   useEffect(() => {
     if (birthday?.effects?.confetti !== false) {
@@ -33,7 +40,7 @@ export default function Celebration({ birthday, onNext }) {
 
       frame();
     }
-  }, [birthday?.effects]);
+  }, [birthday?.effects, primaryColor, secondaryColor]);
 
   return (
     <motion.div
@@ -61,7 +68,10 @@ export default function Celebration({ birthday, onNext }) {
             ease: "easeInOut",
           }}
         >
-          <div className="w-32 h-32 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto shadow-2xl relative overflow-hidden">
+          <div
+            className="w-32 h-32 rounded-full flex items-center justify-center mx-auto shadow-2xl relative overflow-hidden"
+            style={gradientStyle}
+          >
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
               animate={{ x: ["-100%", "100%"] }}
@@ -72,16 +82,17 @@ export default function Celebration({ birthday, onNext }) {
         </motion.div>
 
         <motion.h1
-          className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 mb-6"
+          className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text mb-6"
           style={{
-            filter: "drop-shadow(0 0 30px rgba(255,105,180,0.5))",
+            ...gradientStyle,
+            filter: `drop-shadow(0 0 30px ${primaryColor}88)`,
           }}
         >
           {birthday?.title || "Time to Celebrate!"}
         </motion.h1>
 
         <motion.p
-          className="text-xl text-purple-300 mb-8"
+          className="text-xl text-purple-200 mb-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
@@ -102,7 +113,8 @@ export default function Celebration({ birthday, onNext }) {
       >
         <button
           onClick={onNext}
-          className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 text-white text-lg px-8 py-4 rounded-full shadow-xl border-2 border-white/70 transition-all duration-300 hover:scale-[103%]"
+          style={gradientStyle}
+          className="relative text-white text-lg px-8 py-4 rounded-full shadow-xl border-2 border-white/70 transition-all duration-300 hover:scale-[103%]"
         >
           <motion.div className="flex items-center space-x-2" whileTap={{ scale: 0.95 }}>
             <Gift className="w-5 h-5" />
@@ -118,7 +130,7 @@ export default function Celebration({ birthday, onNext }) {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
       >
-        <p className="text-purple-300 text-base">{birthday?.celebrationMessage || "Click to start the magic! ✨"}</p>
+        <p className="text-purple-200 text-base">{birthday?.celebrationMessage || "Click to start the magic! ✨"}</p>
       </motion.div>
     </motion.div>
   );

@@ -5,17 +5,22 @@ import { motion } from "motion/react";
 import { Gift, Cake } from "lucide-react";
 
 export default function Countdown({ birthday, onComplete }) {
+  const primaryColor = birthday?.theme?.primaryColor || "#ec4899";
+  const secondaryColor = birthday?.theme?.secondaryColor || "#a855f7";
+
+  const gradientStyle = {
+    backgroundImage: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+  };
+
   const targetDate = useMemo(() => {
     if (!birthday?.birthdayDate) return new Date("2025-07-16T00:00:00");
     const parsedDate = new Date(birthday.birthdayDate);
     if (isNaN(parsedDate.getTime())) return new Date();
 
     const now = new Date();
-    // Compute next occurrence of this birthday
     const currentYear = now.getFullYear();
     let nextBirthday = new Date(currentYear, parsedDate.getMonth(), parsedDate.getDate());
 
-    // If birthday already passed this year, set to next year
     if (now.getTime() > nextBirthday.getTime() + 24 * 60 * 60 * 1000) {
       nextBirthday = new Date(currentYear + 1, parsedDate.getMonth(), parsedDate.getDate());
     }
@@ -54,10 +59,10 @@ export default function Countdown({ birthday, onComplete }) {
   }, [targetDate, onComplete]);
 
   const timeUnits = [
-    { label: "Days", value: timeLeft.days, color: "from-pink-500 to-rose-500" },
-    { label: "Hours", value: timeLeft.hours, color: "from-purple-500 to-pink-500" },
-    { label: "Minutes", value: timeLeft.minutes, color: "from-indigo-500 to-purple-500" },
-    { label: "Seconds", value: timeLeft.seconds, color: "from-blue-500 to-indigo-500" },
+    { label: "Days", value: timeLeft.days, color: `from-[${primaryColor}] to-[${secondaryColor}]` },
+    { label: "Hours", value: timeLeft.hours, color: `from-[${primaryColor}] to-[${secondaryColor}]` },
+    { label: "Minutes", value: timeLeft.minutes, color: `from-[${primaryColor}] to-[${secondaryColor}]` },
+    { label: "Seconds", value: timeLeft.seconds, color: `from-[${primaryColor}] to-[${secondaryColor}]` },
   ];
 
   return (
@@ -82,18 +87,19 @@ export default function Countdown({ birthday, onComplete }) {
           }}
           transition={{ duration: 4, repeat: Infinity }}
         >
-          <Cake className="w-16 h-16 text-pink-400 mx-auto" />
+          <Cake className="w-16 h-16 mx-auto" style={{ color: primaryColor }} />
         </motion.div>
 
         <motion.h1
-          className="text-4xl md:text-6xl py-1 md:py-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 mb-4"
+          className="text-4xl md:text-6xl py-1 md:py-2 font-bold text-transparent bg-clip-text mb-4"
           style={{
-            filter: "drop-shadow(0 0 25px rgba(236, 72, 153, 0.3))",
+            ...gradientStyle,
+            filter: `drop-shadow(0 0 25px ${primaryColor}66)`,
           }}
         >
           {birthday?.name ? `${birthday.name}'s Birthday Countdown` : "Birthday Countdown"}
         </motion.h1>
-        <p className="text-lg text-purple-300">
+        <p className="text-lg text-purple-200">
           {birthday?.subtitle || "The magical moment approaches..."}
         </p>
       </motion.div>
@@ -113,9 +119,10 @@ export default function Countdown({ birthday, onComplete }) {
               }}
             >
               <motion.div
-                className={`relative bg-gradient-to-br ${unit.color} rounded-2xl p-6 md:p-8 shadow-xl border border-white/10`}
+                className="relative rounded-2xl p-6 md:p-8 shadow-xl border border-white/10"
                 style={{
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.3), 0 0 20px rgba(236, 72, 153, 0.2)",
+                  background: `linear-gradient(135deg, ${primaryColor}cc, ${secondaryColor}cc)`,
+                  boxShadow: `0 8px 32px rgba(0,0,0,0.3), 0 0 20px ${primaryColor}44`,
                 }}
               >
                 <motion.div
@@ -142,8 +149,8 @@ export default function Countdown({ birthday, onComplete }) {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
       >
-        <Gift className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-        <p className="text-purple-300 text-base">The surprise is just moments away💖</p>
+        <Gift className="w-8 h-8 mx-auto mb-2" style={{ color: secondaryColor }} />
+        <p className="text-purple-200 text-base">The surprise is just moments away💖</p>
       </motion.div>
     </motion.div>
   );
