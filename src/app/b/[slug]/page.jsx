@@ -1,25 +1,26 @@
+import { dbConnect } from "@/lib/mongodb";
+import Birthday from "@/models/Birthday";
 import { defaultBirthdayData } from "@/lib/defaultBirthdayData";
 import BirthdayView from "@/app/components/BirthdayView";
 import NotFoundView from "@/app/components/NotFoundView";
 
 async function getBirthday(slug) {
+  if (!slug) return null;
   const cleanSlug = slug.toLowerCase().trim();
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
   try {
-    const res = await fetch(`${baseUrl}/api/birthdays/public/${cleanSlug}`, {
-      cache: "no-store",
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      return data.birthday;
+    const db = await dbConnect();
+    if (db) {
+      const birthday = await Birthday.findOne({ slug: cleanSlug }).lean();
+      if (birthday) {
+        return JSON.parse(JSON.stringify(birthday));
+      }
     }
   } catch (error) {
     console.error("Fetch birthday error:", error);
   }
 
-  // Graceful fallback for Paaji demo slug if server API is unavailable in build/SSR
+  // Graceful fallback for Paaji demo slug if DB is not populated yet
   if (cleanSlug === "paaji") {
     return defaultBirthdayData;
   }
