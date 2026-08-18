@@ -73,7 +73,7 @@ export default function PhotoGallery({ birthday, onNext }) {
           {photosList.map((photo, index) => (
             <SwiperSlide key={photo._id || photo.id || index} className="relative rounded-xl overflow-hidden">
               <img
-                src={photo.url || photo.src || "/placeholder.svg"}
+                src={typeof photo === "string" ? photo : (photo.url || photo.src || "/placeholder.svg")}
                 alt={photo.caption || `Memory ${index + 1}`}
                 className="w-full h-full object-cover rounded-xl"
               />
