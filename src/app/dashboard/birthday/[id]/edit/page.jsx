@@ -17,6 +17,7 @@ import {
   FileText,
   X,
   Save,
+  Check,
 } from "lucide-react";
 import BirthdayView from "@/app/components/BirthdayView";
 
@@ -35,6 +36,7 @@ export default function EditBirthdayPage({ params }) {
   const [formData, setFormData] = useState(null);
   const [fetching, setFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [uploadingMusic, setUploadingMusic] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [showPreview, setShowPreview] = useState(false);
@@ -52,7 +54,6 @@ export default function EditBirthdayPage({ params }) {
         throw new Error(data.error || "Failed to load birthday details");
       }
 
-      // Format date for date input
       let bDateStr = "";
       if (data.birthday?.birthdayDate) {
         bDateStr = new Date(data.birthday.birthdayDate).toISOString().split("T")[0];
@@ -106,6 +107,37 @@ export default function EditBirthdayPage({ params }) {
       setError(err.message || "Failed to upload images");
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleMusicUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploadingMusic(true);
+    setError("");
+
+    try {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("type", "audio");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: data,
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Music upload failed");
+
+      setFormData((prev) => ({
+        ...prev,
+        music: { ...(prev.music || {}), url: result.url, enabled: true },
+      }));
+    } catch (err) {
+      setError(err.message || "Failed to upload audio file");
+    } finally {
+      setUploadingMusic(false);
     }
   };
 
@@ -534,25 +566,84 @@ export default function EditBirthdayPage({ params }) {
               </div>
             </div>
 
-            {/* Music Toggle */}
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Music className="w-5 h-5 text-pink-400" />
-                <div>
-                  <div className="text-sm font-medium text-white">Enable Background Music</div>
+            {/* Music Options */}
+            <div className="pt-4 border-t border-white/10 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Music className="w-5 h-5 text-pink-400" />
+                  <div>
+                    <div className="text-sm font-medium text-white">Enable Background Music</div>
+                    <div className="text-xs text-purple-300/60">Plays ambient audio track on user interaction</div>
+                  </div>
                 </div>
+                <input
+                  type="checkbox"
+                  checked={formData.music?.enabled ?? true}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      music: { ...(formData.music || {}), enabled: e.target.checked },
+                    })
+                  }
+                  className="w-5 h-5 accent-pink-500 cursor-pointer"
+                />
               </div>
-              <input
-                type="checkbox"
-                checked={formData.music?.enabled ?? true}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    music: { ...(formData.music || {}), enabled: e.target.checked },
-                  })
-                }
-                className="w-5 h-5 accent-pink-500 cursor-pointer"
-              />
+
+              {(formData.music?.enabled ?? true) && (
+                <div className="bg-black/30 border border-white/10 p-4 rounded-2xl space-y-4">
+                  <div className="text-xs font-semibold text-purple-200">Audio Track Options</div>
+
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          music: { ...(formData.music || {}), url: "", enabled: true },
+                        })
+                      }
+                      className={`flex-1 py-3 px-4 rounded-2xl border text-xs font-semibold text-center transition-all flex items-center justify-center gap-2 ${
+                        !formData.music?.url
+                          ? "border-pink-500 bg-pink-500/20 text-white shadow-md"
+                          : "border-white/10 bg-white/5 text-purple-300 hover:bg-white/10"
+                      }`}
+                    >
+                      <Check className={`w-3.5 h-3.5 ${!formData.music?.url ? "opacity-100" : "opacity-0"}`} />
+                      <span>Use Default Soothing Music</span>
+                    </button>
+
+                    <label className="flex-1 py-3 px-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-center cursor-pointer text-purple-200 transition-all flex items-center justify-center gap-2">
+                      <Upload className="w-4 h-4 text-pink-400" />
+                      <span>{uploadingMusic ? "Uploading Audio..." : "Upload Custom Audio (MP3/WAV)"}</span>
+                      <input
+                        type="file"
+                        accept="audio/*"
+                        onChange={handleMusicUpload}
+                        disabled={uploadingMusic}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+
+                  {formData.music?.url && (
+                    <div className="flex items-center gap-2 text-xs text-pink-300 font-mono bg-white/5 p-3 rounded-xl border border-white/10">
+                      <span className="truncate flex-1">Custom Audio URL: {formData.music.url}</span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFormData({
+                            ...formData,
+                            music: { ...(formData.music || {}), url: "", enabled: true },
+                          })
+                        }
+                        className="text-purple-300 hover:text-red-400 font-sans text-xs underline"
+                      >
+                        Reset to Default
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
