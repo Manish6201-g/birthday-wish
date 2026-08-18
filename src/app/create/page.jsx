@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -30,6 +30,8 @@ const THEME_PRESETS = [
 
 export default function CreateBirthdayPage() {
   const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -66,6 +68,20 @@ export default function CreateBirthdayPage() {
       particles: true,
     },
   });
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated) {
+          setUser(data.user);
+        } else {
+          router.push("/login");
+        }
+      })
+      .catch(() => router.push("/login"))
+      .finally(() => setCheckingAuth(false));
+  }, []);
 
   const [uploading, setUploading] = useState(false);
   const [uploadingMusic, setUploadingMusic] = useState(false);
@@ -200,6 +216,41 @@ export default function CreateBirthdayPage() {
       setLoading(false);
     }
   };
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-950 via-black to-purple-950 flex items-center justify-center">
+        <Cake className="w-12 h-12 text-pink-400 animate-bounce" />
+      </div>
+    );
+  }
+
+  const PRIMARY_ADMIN_EMAIL = "manish001yadav0@gmail.com";
+  const isAuthorized = user && (user.email.toLowerCase() === PRIMARY_ADMIN_EMAIL || user.canCreate === true || user.role === "admin");
+
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-950 via-black to-purple-950 flex flex-col items-center justify-center p-4 text-center text-white">
+        <div className="max-w-md w-full bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-2xl">
+          <div className="w-14 h-14 bg-red-500/20 text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/30">
+            <X className="w-7 h-7" />
+          </div>
+          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-pink-400 mb-2">
+            Access Restricted
+          </h2>
+          <p className="text-purple-200/80 text-sm mb-6 leading-relaxed">
+            Creation access is restricted. Only the site administrator (<span className="text-pink-300 font-semibold">{PRIMARY_ADMIN_EMAIL}</span>) or authorized users can build new birthday websites.
+          </p>
+          <Link
+            href="/dashboard"
+            className="inline-block bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white font-semibold px-6 py-3 rounded-2xl text-sm shadow-lg hover:scale-[102%] transition-all"
+          >
+            Return to Dashboard
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-950 via-black to-purple-950 text-white relative p-4 sm:p-8 overflow-x-hidden">

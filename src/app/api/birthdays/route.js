@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/mongodb";
 import Birthday from "@/models/Birthday";
+import User from "@/models/User";
 import { getAuthUser } from "@/lib/auth";
+
+const PRIMARY_ADMIN_EMAIL = "manish001yadav0@gmail.com";
 
 export async function GET(request) {
   try {
@@ -30,16 +33,26 @@ export async function POST(request) {
       return NextResponse.json({ error: "Unauthorized. Please log in to create a birthday website." }, { status: 401 });
     }
 
-    // Check Allowed Emails Whitelist if set
-    const allowedEmailsEnv = process.env.ALLOWED_EMAILS || process.env.ADMIN_EMAIL;
-    if (allowedEmailsEnv && user.email) {
-      const allowedList = allowedEmailsEnv.split(",").map((e) => e.trim().toLowerCase());
-      if (!allowedList.includes(user.email.toLowerCase())) {
-        return NextResponse.json(
-          { error: "Forbidden: Your account does not have creation permissions. Access is restricted to authorized creators." },
-          { status: 403 }
-        );
-      }
+    const db = await dbConnect();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection unavailable" }, { status: 500 });
+    }
+
+    // Verify creator authorization in database
+    const dbUser = await User.findById(user.id);
+    if (!dbUser) {
+      return NextResponse.json({ error: "User account not found" }, { status: 404 });
+    }
+
+    const allowedEmailsEnv = process.env.ALLOWED_EMAILS || process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL;
+    const allowedList = allowedEmailsEnv.split(",").map((e) => e.trim().toLowerCase());
+    const isOwnerOrAllowed = allowedList.includes(dbUser.email.toLowerCase());
+
+    if (!isOwnerOrAllowed && !dbUser.canCreate && dbUser.role !== "admin") {
+      return NextResponse.json(
+        { error: "Access Denied: You do not have permission to create birthday websites. Creation is restricted to the administrator (Manish)." },
+        { status: 403 }
+      );
     }
 
     const data = await request.json();
@@ -57,11 +70,6 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid URL slug" }, { status: 400 });
     }
 
-    const db = await dbConnect();
-    if (!db) {
-      return NextResponse.json({ error: "Database connection unavailable" }, { status: 500 });
-    }
-
     // Check slug uniqueness
     const existing = await Birthday.findOne({ slug: cleanSlug });
     if (existing) {
@@ -74,7 +82,7 @@ export async function POST(request) {
     const birthday = await Birthday.create({
       ...data,
       slug: cleanSlug,
-      createdBy: user.id,
+      createdBy: dbUser._id,
     });
 
     return NextResponse.json({ birthday, message: "Birthday created successfully" });

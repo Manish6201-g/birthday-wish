@@ -3,6 +3,8 @@ import { dbConnect } from "@/lib/mongodb";
 import User from "@/models/User";
 import { hashPassword, signToken, setAuthCookie } from "@/lib/auth";
 
+const PRIMARY_ADMIN_EMAIL = "manish001yadav0@gmail.com";
+
 export async function POST(request) {
   try {
     const { name, email, password, inviteCode } = await request.json();
@@ -23,27 +25,21 @@ export async function POST(request) {
 
     const cleanEmail = email.toLowerCase().trim();
 
-    // Check Allowed Emails Whitelist if set
-    const allowedEmailsEnv = process.env.ALLOWED_EMAILS || process.env.ADMIN_EMAIL;
-    if (allowedEmailsEnv) {
-      const allowedList = allowedEmailsEnv.split(",").map((e) => e.trim().toLowerCase());
-      if (!allowedList.includes(cleanEmail)) {
-        return NextResponse.json(
-          { error: "Access Restricted: Your email is not authorized to create birthday websites. Please contact the owner for access." },
-          { status: 403 }
-        );
-      }
-    }
+    // Check if user is Primary Admin or in ALLOWED_EMAILS
+    const allowedEmailsEnv = process.env.ALLOWED_EMAILS || process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL;
+    const allowedList = allowedEmailsEnv.split(",").map((e) => e.trim().toLowerCase());
+    const isOwnerOrAllowed = allowedList.includes(cleanEmail);
 
-    // Check Access Passcode if set
-    const accessPasscodeEnv = process.env.ACCESS_PASSCODE || process.env.INVITE_CODE;
-    if (accessPasscodeEnv) {
-      if (!inviteCode || inviteCode.trim() !== accessPasscodeEnv.trim()) {
-        return NextResponse.json(
-          { error: "Invalid Access Passcode / Invite Code. Registration is restricted to authorized users." },
-          { status: 403 }
-        );
-      }
+    // Check Access Passcode if provided
+    const requiredPasscode = process.env.ACCESS_PASSCODE || process.env.ADMIN_PASSCODE;
+    const hasValidPasscode = requiredPasscode && inviteCode && inviteCode.trim() === requiredPasscode.trim();
+
+    // If restricted mode is enabled (or non-admin), require passcode or whitelist
+    if (process.env.RESTRICT_REGISTRATION === "true" && !isOwnerOrAllowed && !hasValidPasscode) {
+      return NextResponse.json(
+        { error: "Access Restricted: Registration requires a valid Admin Passcode or authorized email." },
+        { status: 403 }
+      );
     }
 
     await dbConnect();
@@ -56,20 +52,24 @@ export async function POST(request) {
       );
     }
 
+    // Only Admin or valid Passcode holders get creation rights (canCreate: true)
+    const isAdmin = isOwnerOrAllowed;
+    const canCreate = isAdmin || hasValidPasscode;
+
     const hashedPassword = await hashPassword(password);
     const user = await User.create({
       name,
       email: cleanEmail,
       password: hashedPassword,
-      role: allowedEmailsEnv && allowedEmailsEnv.includes(cleanEmail) ? "admin" : "creator",
-      canCreate: true,
+      role: isAdmin ? "admin" : "creator",
+      canCreate: canCreate,
     });
 
-    const token = signToken({ id: user._id, email: user.email, name: user.name, role: user.role });
+    const token = signToken({ id: user._id, email: user.email, name: user.name, role: user.role, canCreate: user.canCreate });
     await setAuthCookie(token);
 
     return NextResponse.json({
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, canCreate: user.canCreate },
       message: "Registration successful",
     });
   } catch (error) {
