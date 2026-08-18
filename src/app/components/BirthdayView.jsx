@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { RotateCcw } from "lucide-react";
 import Loader from "./Loader";
 import Countdown from "./Countdown";
 import Celebration from "./Celebration";
@@ -30,6 +31,10 @@ export default function BirthdayView({ birthday }) {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleRestart = () => {
+    setCurrentScreen(0);
+  };
+
   const screens = [
     !isBirthdayOver ? (
       <Countdown
@@ -54,7 +59,7 @@ export default function BirthdayView({ birthday }) {
       birthday={birthday}
       onNext={() => setCurrentScreen(3)}
     />,
-    <Letter key="letter" birthday={birthday} />,
+    <Letter key="letter" birthday={birthday} onRestart={handleRestart} />,
   ];
 
   // Dynamic Theme Colors
@@ -94,6 +99,24 @@ export default function BirthdayView({ birthday }) {
 
       {/* Floating Background Music Player */}
       <MusicPlayer musicConfig={birthday?.music} />
+
+      {/* Floating Restart/Replay Button (shows on screens 1, 2, 3) */}
+      {!isLoading && currentScreen > 0 && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="fixed bottom-4 left-4 z-50"
+        >
+          <button
+            onClick={handleRestart}
+            className="flex items-center gap-2 bg-black/60 hover:bg-black/80 text-white backdrop-blur-md px-3.5 py-2 rounded-full border border-pink-500/30 shadow-lg text-xs font-semibold transition-all hover:scale-105"
+            title="Restart Website Celebration"
+          >
+            <RotateCcw className="w-3.5 h-3.5 text-pink-400" />
+            <span>Restart</span>
+          </button>
+        </motion.div>
+      )}
 
       {/* Watermark Signature */}
       <motion.div

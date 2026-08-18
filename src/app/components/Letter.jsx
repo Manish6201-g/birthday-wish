@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Mail, Heart, Sparkles, RotateCcw } from "lucide-react";
 import confetti from "canvas-confetti";
 
-export default function Letter({ birthday }) {
+export default function Letter({ birthday, onRestart }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showText, setShowText] = useState(false);
   const [currentText, setCurrentText] = useState("");
@@ -185,18 +185,31 @@ export default function Letter({ birthday }) {
 
                 {currentText === letterText && (
                   <motion.div
-                    className="text-center mt-6"
+                    className="text-center mt-6 flex flex-wrap justify-center gap-3"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 }}
+                    transition={{ delay: 0.5 }}
                   >
                     <button
                       onClick={handleReset}
-                      className="inline-flex items-center gap-2 bg-white/60 text-pink-600 font-medium border border-pink-400 px-5 py-2 rounded-full hover:bg-pink-100 transition-all"
+                      className="inline-flex items-center gap-2 bg-white/60 text-pink-600 font-medium border border-pink-400 px-5 py-2 rounded-full hover:bg-pink-100 transition-all text-sm"
                     >
                       <RotateCcw className="w-4 h-4" />
-                      Read Again
+                      Read Letter Again
                     </button>
+
+                    {onRestart && (
+                      <button
+                        onClick={onRestart}
+                        style={{
+                          backgroundImage: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+                        }}
+                        className="inline-flex items-center gap-2 text-white font-semibold px-6 py-2.5 rounded-full shadow-lg border border-white/40 hover:scale-105 transition-all text-sm"
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        Replay Celebration 🎉
+                      </button>
+                    )}
                   </motion.div>
                 )}
 
