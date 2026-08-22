@@ -30,6 +30,14 @@ export default function PhotoGallery({ birthday, onNext }) {
       ? birthday.photos
       : defaultPhotos;
 
+  const getOptimizedSrc = (photo) => {
+    const rawSrc = typeof photo === "string" ? photo : (photo.url || photo.src || "/placeholder.svg");
+    if (typeof rawSrc === "string" && rawSrc.includes("res.cloudinary.com") && !rawSrc.includes("f_auto")) {
+      return rawSrc.replace("/upload/", "/upload/f_auto,q_auto,w_1000/");
+    }
+    return rawSrc;
+  };
+
   return (
     <motion.div
       className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden"
@@ -69,7 +77,7 @@ export default function PhotoGallery({ birthday, onNext }) {
         </p>
       </motion.div>
 
-      {/* 3D Coverflow Photo Slider */}
+      {/* 3D Coverflow Photo Slider with Auto Format Adjustment */}
       <div className="w-full max-w-3xl mx-auto relative px-2 sm:px-10">
         <Swiper
           key={`swiper-gallery-${photosList.length}`}
@@ -96,25 +104,39 @@ export default function PhotoGallery({ birthday, onNext }) {
             nextEl: ".swiper-button-next-custom",
           }}
           modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
-          className="mySwiper h-[380px] sm:h-[450px] rounded-2xl py-4"
+          className="mySwiper h-[400px] sm:h-[480px] rounded-2xl py-4"
         >
-          {photosList.map((photo, index) => (
-            <SwiperSlide
-              key={photo._id || photo.id || index}
-              className="w-[280px] sm:w-[360px] h-[340px] sm:h-[400px] relative rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20"
-            >
-              <img
-                src={typeof photo === "string" ? photo : (photo.url || photo.src || "/placeholder.svg")}
-                alt={photo.caption || `Memory ${index + 1}`}
-                className="w-full h-full object-cover rounded-2xl"
-              />
-              {photo.caption && (
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 text-center text-white text-xs sm:text-sm font-medium">
-                  {photo.caption}
+          {photosList.map((photo, index) => {
+            const imgSrc = getOptimizedSrc(photo);
+            return (
+              <SwiperSlide
+                key={photo._id || photo.id || index}
+                className="w-[280px] sm:w-[380px] h-[360px] sm:h-[430px] relative rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 bg-black/60"
+              >
+                {/* Ambient Blurred Background Layer (Auto-fills background aspect ratio) */}
+                <img
+                  src={imgSrc}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110 pointer-events-none"
+                />
+
+                {/* Main Auto-Adjusted Foreground Image (Preserves full portrait/landscape aspect ratio without cropping) */}
+                <div className="relative w-full h-full flex items-center justify-center p-3 z-10">
+                  <img
+                    src={imgSrc}
+                    alt={photo.caption || `Memory ${index + 1}`}
+                    className="max-w-full max-h-full object-contain rounded-xl shadow-2xl transition-transform duration-300 hover:scale-[1.02]"
+                  />
                 </div>
-              )}
-            </SwiperSlide>
-          ))}
+
+                {photo.caption && (
+                  <div className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-4 text-center text-white text-xs sm:text-sm font-medium">
+                    {photo.caption}
+                  </div>
+                )}
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
 
         {/* Custom Navigation Arrows */}
