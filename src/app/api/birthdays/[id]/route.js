@@ -88,7 +88,7 @@ export async function DELETE(request, { params }) {
       return NextResponse.json({ error: "Forbidden: You do not own this birthday" }, { status: 403 });
     }
 
-    // Clean up photos from Cloudinary if applicable
+    // 1. Delete all uploaded memory photos from Cloudinary
     if (existing.photos && Array.isArray(existing.photos)) {
       for (const photo of existing.photos) {
         if (photo.url && photo.url.includes("cloudinary.com")) {
@@ -97,8 +97,15 @@ export async function DELETE(request, { params }) {
       }
     }
 
+    // 2. Delete custom background music audio file from Cloudinary if applicable
+    if (existing.music?.url && existing.music.url.includes("cloudinary.com")) {
+      await deleteCloudinaryImage(existing.music.url);
+    }
+
+    // 3. Delete the birthday record permanently from MongoDB database
     await Birthday.findByIdAndDelete(id);
-    return NextResponse.json({ message: "Birthday deleted successfully" });
+
+    return NextResponse.json({ message: "Birthday website and all associated Cloudinary assets deleted successfully" });
   } catch (error) {
     console.error("Delete birthday error:", error);
     return NextResponse.json({ error: "Failed to delete birthday" }, { status: 500 });

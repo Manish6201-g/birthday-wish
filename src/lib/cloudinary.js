@@ -50,17 +50,20 @@ export async function uploadImageToCloudinary(fileBuffer, folder = "birthday_pho
 
 export async function deleteCloudinaryImage(url) {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  if (!url || !cloudName) return;
+  if (!url || !cloudName || !url.includes("cloudinary.com")) return;
 
   try {
     const cld = configureCloudinary();
+    const isVideoOrAudio = url.includes("/video/upload/");
+    const resourceType = isVideoOrAudio ? "video" : "image";
+
     const parts = url.split("/");
     const filename = parts.pop();
     const publicId = filename.split(".")[0];
     const folder = parts[parts.length - 1];
-    const fullPublicId = folder && folder !== "upload" ? `${folder}/${publicId}` : publicId;
+    const fullPublicId = folder && folder !== "upload" && folder !== "video" && folder !== "image" ? `${folder}/${publicId}` : publicId;
 
-    await cld.uploader.destroy(fullPublicId, { resource_type: "auto" });
+    await cld.uploader.destroy(fullPublicId, { resource_type: resourceType });
   } catch (error) {
     console.error("Failed to delete Cloudinary asset:", error);
   }
