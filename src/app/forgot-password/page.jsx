@@ -3,26 +3,30 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Mail, ArrowRight, Cake, ArrowLeft, KeyRound, CheckCircle } from "lucide-react";
+import { Mail, ArrowRight, Cake, ArrowLeft, KeyRound, CheckCircle, ShieldCheck } from "lucide-react";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
+  const [adminPasscode, setAdminPasscode] = useState("");
+  const [showAdminField, setShowAdminField] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState("");
   const [resetUrl, setResetUrl] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess(false);
+    setResetUrl("");
     setLoading(true);
 
     try {
       const res = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, adminPasscode }),
       });
 
       const data = await res.json();
@@ -32,6 +36,7 @@ export default function ForgotPasswordPage() {
       }
 
       setSuccess(true);
+      setMessage(data.message);
       if (data.resetUrl) {
         setResetUrl(data.resetUrl);
       }
@@ -62,7 +67,7 @@ export default function ForgotPasswordPage() {
             Forgot Password
           </h1>
           <p className="text-purple-200/70 text-sm mt-1">
-            Enter your account email to receive a password reset link
+            Enter your account email to request a secure password reset
           </p>
         </div>
 
@@ -76,12 +81,14 @@ export default function ForgotPasswordPage() {
           <div className="space-y-6 text-center">
             <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm leading-relaxed flex flex-col items-center gap-3">
               <CheckCircle className="w-8 h-8 text-emerald-400" />
-              <span>Password reset link generated successfully!</span>
+              <span>{message}</span>
             </div>
 
             {resetUrl && (
-              <div className="bg-black/40 border border-white/10 p-4 rounded-2xl space-y-3">
-                <p className="text-xs text-purple-200/80">Click below to reset your password now:</p>
+              <div className="bg-black/40 border border-emerald-500/30 p-4 rounded-2xl space-y-3">
+                <p className="text-xs text-emerald-300 font-semibold flex items-center justify-center gap-1">
+                  <ShieldCheck className="w-4 h-4" /> Admin Verified: Link Generated
+                </p>
                 <Link
                   href={resetUrl}
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-sm font-semibold px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-all w-full justify-center"
@@ -106,7 +113,7 @@ export default function ForgotPasswordPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-purple-200 text-sm font-medium mb-2">
-                Email Address
+                Account Email Address
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300/50" />
@@ -121,16 +128,44 @@ export default function ForgotPasswordPage() {
               </div>
             </div>
 
+            {showAdminField ? (
+              <div>
+                <label className="block text-purple-200 text-sm font-medium mb-2">
+                  Admin Passcode (Owner Only)
+                </label>
+                <div className="relative">
+                  <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-pink-400" />
+                  <input
+                    type="password"
+                    value={adminPasscode}
+                    onChange={(e) => setAdminPasscode(e.target.value)}
+                    placeholder="Enter owner passcode"
+                    className="w-full bg-white/5 border border-pink-500/40 rounded-2xl py-3.5 pl-12 pr-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500 transition-all text-sm"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="text-right">
+                <button
+                  type="button"
+                  onClick={() => setShowAdminField(true)}
+                  className="text-xs text-purple-300/60 hover:text-pink-300 underline"
+                >
+                  Admin Owner Reset?
+                </button>
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={loading}
               className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 text-white py-3.5 px-6 rounded-2xl font-semibold shadow-lg border border-white/20 transition-all hover:scale-[101%] disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading ? (
-                <span>Generating Link...</span>
+                <span>Processing...</span>
               ) : (
                 <>
-                  <span>Send Reset Link</span>
+                  <span>Request Reset</span>
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
