@@ -21,12 +21,18 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "creator"],
+      enum: ["admin", "creator", "user"],
       default: "creator",
     },
     canCreate: {
       type: Boolean,
       default: true,
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpire: {
+      type: Date,
     },
   },
   {
