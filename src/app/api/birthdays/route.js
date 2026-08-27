@@ -38,7 +38,7 @@ export async function POST(request) {
       return NextResponse.json({ error: "Database connection unavailable" }, { status: 500 });
     }
 
-    // Verify creator authorization in database
+    // Verify admin/owner creator authorization in database
     const dbUser = await User.findById(user.id);
     if (!dbUser) {
       return NextResponse.json({ error: "User account not found" }, { status: 404 });
@@ -46,11 +46,14 @@ export async function POST(request) {
 
     const allowedEmailsEnv = process.env.ALLOWED_EMAILS || process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL;
     const allowedList = allowedEmailsEnv.split(",").map((e) => e.trim().toLowerCase());
-    const isOwnerOrAllowed = allowedList.includes(dbUser.email.toLowerCase());
+    const isOwnerOrAdmin =
+      dbUser.email.toLowerCase() === PRIMARY_ADMIN_EMAIL ||
+      allowedList.includes(dbUser.email.toLowerCase()) ||
+      dbUser.role === "admin";
 
-    if (!isOwnerOrAllowed && !dbUser.canCreate && dbUser.role !== "admin") {
+    if (!isOwnerOrAdmin) {
       return NextResponse.json(
-        { error: "Access Denied: You do not have permission to create birthday websites. Creation is restricted to the administrator (Manish)." },
+        { error: "Access Denied: Only the site administrator (Manish - manish001yadav0@gmail.com) has permission to create birthday websites." },
         { status: 403 }
       );
     }
