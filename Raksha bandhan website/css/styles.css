@@ -1,0 +1,374 @@
+/* ==========================================================================
+   Raksha Bandhan Celebration Website Styles
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Sacramento&display=swap');
+
+:root {
+  --color-crimson: #6A040F;
+  --color-maroon: #370617;
+  --color-deep-red: #9D0208;
+  --color-gold: #FFD700;
+  --color-gold-dark: #D4AF37;
+  --color-gold-light: #FFF2A1;
+  --color-amber: #FAA307;
+  --color-rose: #E86A92;
+  --color-cream: #FFFBF4;
+  --color-card-bg: rgba(55, 6, 23, 0.7);
+  --color-glass-border: rgba(255, 215, 0, 0.25);
+  
+  --font-serif: 'Playfair Display', serif;
+  --font-heading: 'Cinzel', serif;
+  --font-sans: 'Outfit', sans-serif;
+  --font-handwriting: 'Sacramento', cursive;
+  --font-cursive: 'Great Vibes', cursive;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: radial-gradient(circle at top center, #520516 0%, #29040e 50%, #120106 100%);
+  color: var(--color-cream);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Background canvas for floating petals & sparkles */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 2;
+}
+
+/* Golden Shimmer Text */
+.gold-shimmer {
+  background: linear-gradient(135deg, #FFF2A1 0%, #FFD700 35%, #F3A712 70%, #FFF2A1 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Glassmorphism Containers */
+.festive-glass {
+  background: rgba(48, 5, 17, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 215, 0, 0.05);
+  border-radius: 1.25rem;
+}
+
+.festive-glass-card {
+  background: linear-gradient(135deg, rgba(82, 5, 22, 0.7), rgba(41, 4, 14, 0.85));
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.festive-glass-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 215, 0, 0.6);
+  box-shadow: 0 15px 35px rgba(255, 215, 0, 0.2);
+}
+
+/* Golden Buttons */
+.btn-gold {
+  background: linear-gradient(135deg, #FFD700 0%, #D4AF37 50%, #B8860B 100%);
+  color: #29040e;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: rotate(30deg);
+  transition: 0.8s;
+}
+
+.btn-gold:hover::after {
+  left: 100%;
+}
+
+.btn-gold:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+  color: #120106;
+}
+
+.btn-outline-gold {
+  background: transparent;
+  color: #FFD700;
+  border: 2px solid #FFD700;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-gold:hover {
+  background: rgba(255, 215, 0, 0.15);
+  color: #FFF2A1;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+/* Envelope Modal & Unboxing */
+.envelope-wrapper {
+  perspective: 1000px;
+}
+
+.envelope {
+  width: 320px;
+  height: 220px;
+  background: #7A0C1E;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.6s ease;
+}
+
+@media (min-width: 640px) {
+  .envelope {
+    width: 420px;
+    height: 280px;
+  }
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 160px solid transparent;
+  border-right: 160px solid transparent;
+  border-top: 130px solid #9D0208;
+  transform-origin: top;
+  transition: transform 0.6s ease;
+  z-index: 3;
+}
+
+@media (min-width: 640px) {
+  .envelope-flap {
+    border-left-width: 210px;
+    border-right-width: 210px;
+    border-top-width: 165px;
+  }
+}
+
+.envelope.open .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.wax-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  background: radial-gradient(circle, #FFD700 0%, #B8860B 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  z-index: 4;
+  transition: transform 0.4s ease;
+}
+
+.envelope:hover .wax-seal {
+  transform: translate(-50%, -50%) scale(1.1) rotate(10deg);
+}
+
+/* 3D Voucher Flip Cards */
+.voucher-card {
+  perspective: 1000px;
+  height: 260px;
+}
+
+.voucher-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.voucher-card.flipped .voucher-inner {
+  transform: rotateY(180deg);
+}
+
+.voucher-front, .voucher-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.voucher-front {
+  background: linear-gradient(135deg, rgba(82, 5, 22, 0.85), rgba(55, 6, 23, 0.95));
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.voucher-back {
+  background: linear-gradient(135deg, rgba(157, 2, 8, 0.95), rgba(74, 14, 23, 0.95));
+  transform: rotateY(180deg);
+  border-color: #FFD700;
+}
+
+.stamp-redeemed {
+  border: 3px dashed #FFD700;
+  color: #FFD700;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 0.5rem 1rem;
+  transform: rotate(-12deg);
+  display: inline-block;
+  animation: stampPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes stampPop {
+  0% { transform: scale(3) rotate(-20deg); opacity: 0; }
+  100% { transform: scale(1) rotate(-12deg); opacity: 1; }
+}
+
+/* Polaroid Memory Gallery */
+.polaroid-card {
+  background: #FFFBF4;
+  color: #29040e;
+  padding: 12px 12px 24px 12px;
+  border-radius: 4px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transform: rotate(var(--rotation, 0deg));
+  transition: all 0.35s ease;
+}
+
+.polaroid-card:hover {
+  transform: scale(1.05) rotate(0deg) !important;
+  z-index: 10;
+  box-shadow: 0 15px 35px rgba(255, 215, 0, 0.3);
+}
+
+.polaroid-img-box {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 2px;
+  background: #E8ECF1;
+}
+
+.polaroid-caption {
+  font-family: var(--font-handwriting);
+  font-size: 1.6rem;
+  text-align: center;
+  margin-top: 10px;
+  color: #520516;
+}
+
+/* Mithai Thali Items */
+.mithai-item {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.mithai-item:hover {
+  transform: scale(1.15) translateY(-5px);
+  filter: drop-shadow(0 8px 15px rgba(255, 215, 0, 0.5));
+}
+
+.mithai-item:active {
+  transform: scale(0.95);
+}
+
+/* Diya Flame Glow Animation */
+.diya-flame {
+  width: 16px;
+  height: 26px;
+  background: radial-gradient(ellipse at bottom, #FFFFFF 0%, #FFD700 40%, #FF4500 80%, transparent 100%);
+  border-radius: 50% 50% 20% 20%;
+  animation: flameFlicker 1.2s infinite alternate ease-in-out;
+  box-shadow: 0 0 20px #FFD700, 0 -10px 30px #FF4500;
+}
+
+@keyframes flameFlicker {
+  0% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
+  50% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+  100% { transform: scale(0.95) rotate(-1deg); opacity: 0.85; }
+}
+
+/* Pulse Glow */
+.pulse-glow {
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #120106;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7A0C1E;
+  border-radius: 4px;
+  border: 1px solid #FFD700;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9D0208;
+}

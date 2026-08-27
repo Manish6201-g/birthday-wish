@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Raksha Bandhan | Celebrating Sibling Love</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="relative min-h-screen selection:bg-yellow-500 selection:text-red-950">
+
+  <!-- Background Petal & Sparkle Canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- ==========================================
+       UNBOXING ENVELOPE MODAL OVERLAY
+       ========================================== -->
+  <div id="envelope-modal" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 backdrop-blur-md p-4 transition-all duration-700">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl sm:text-5xl font-extrabold gold-shimmer tracking-wide mb-2" style="font-family: var(--font-heading);">
+        A Special Wish For You
+      </h1>
+      <p class="text-yellow-200/80 text-sm sm:text-base font-light">
+        Tap the golden seal to open your Raksha Bandhan envelope 💌
+      </p>
+    </div>
+
+    <!-- Envelope -->
+    <div id="envelope" class="envelope flex items-center justify-center mb-8">
+      <div class="envelope-flap"></div>
+      <div class="wax-seal">
+        <span>🪔</span>
+      </div>
+      <div class="absolute bottom-6 text-center text-xs text-yellow-300 font-semibold tracking-wider uppercase">
+        Click To Open
+      </div>
+    </div>
+
+    <button id="open-envelope-btn" class="btn-gold px-8 py-3 rounded-full text-base sm:text-lg flex items-center gap-2 shadow-lg">
+      <span>✨ Open Your Gift Envelope</span>
+    </button>
+  </div>
+
+  <!-- ==========================================
+       MAIN WEBSITE CONTENT WRAPPER
+       ========================================== -->
+  <div class="content-wrapper">
+    
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-lg bg-maroon-950/70 border-b border-yellow-500/20 py-3 px-4 sm:px-8">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <!-- Logo / Title -->
+        <div class="flex items-center gap-2">
+          <span class="text-2xl sm:text-3xl">🪔</span>
+          <span class="text-lg sm:text-2xl font-bold gold-shimmer tracking-wider" style="font-family: var(--font-heading);">
+            Raksha Bandhan
+          </span>
+        </div>
+
+        <!-- Header Controls -->
+        <div class="flex items-center gap-2 sm:gap-4">
+          <button id="music-toggle-btn" class="px-3 py-1.5 rounded-full border border-yellow-500/40 text-xs sm:text-sm text-yellow-300 hover:bg-yellow-500/20 transition-all flex items-center gap-1.5">
+            <span>🎵 Sound: OFF</span>
+          </button>
+          
+          <button id="customize-btn" class="btn-outline-gold px-3 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1.5">
+            <span>⚙️ Customize</span>
+          </button>
+
+          <button id="share-link-btn" class="btn-gold px-3.5 py-1.5 rounded-full text-xs sm:text-sm flex items-center gap-1">
+            <span>🔗 Share Link</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative py-16 sm:py-24 px-4 text-center overflow-hidden">
+      <div class="max-w-4xl mx-auto">
+        <div class="inline-block px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-xs sm:text-sm font-semibold tracking-widest uppercase mb-6">
+          ✨ Sacred Bond of Protection & Love ✨
+        </div>
+
+        <h1 class="text-4xl sm:text-7xl font-black mb-6 gold-shimmer leading-tight" style="font-family: var(--font-serif);">
+          Happy Raksha Bandhan,<br/>
+          <span class="display-sister-name text-yellow-100 italic">Priya</span>! 🌸
+        </h1>
+
+        <p class="text-base sm:text-xl text-yellow-100/90 max-w-2xl mx-auto font-light leading-relaxed mb-8">
+          Celebrating the eternal love, endless banter, cherished childhood memories, and sacred protection shared with <span class="display-brother-name font-semibold text-yellow-300">Manish</span>.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <a href="#rakhi-ceremony-section" class="btn-gold px-8 py-3.5 rounded-full text-base sm:text-lg flex items-center gap-2">
+            <span>🎀 Tie Virtual Rakhi</span>
+          </a>
+          <a href="#vouchers-section" class="btn-outline-gold px-8 py-3.5 rounded-full text-base sm:text-lg flex items-center gap-2">
+            <span>📜 View Sister Promises</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: VIRTUAL RAKHI TYING CEREMONY -->
+    <section id="rakhi-ceremony-section" class="py-12 sm:py-20 px-4">
+      <div class="max-w-4xl mx-auto">
+        <div class="festive-glass p-6 sm:p-10 text-center relative overflow-hidden">
+          
+          <h2 class="text-2xl sm:text-4xl font-bold gold-shimmer mb-3" style="font-family: var(--font-heading);">
+            🪔 Virtual Rakhi Tying Ceremony
+          </h2>
+          <p class="text-sm sm:text-base text-yellow-200/80 mb-8 max-w-xl mx-auto">
+            Choose a Rakhi design, then click "Tie Rakhi" to place it onto the sacred wrist with traditional Aarti light and celebratory confetti!
+          </p>
+
+          <!-- Rakhi Selection Cards -->
+          <div class="grid grid-cols-3 gap-3 sm:gap-6 max-w-lg mx-auto mb-8">
+            <div class="rakhi-option cursor-pointer p-3 rounded-xl border-2 border-yellow-400 bg-yellow-900/30 transition-all text-center" data-rakhi="royal">
+              <div class="text-3xl mb-1">🏵️</div>
+              <div class="text-xs font-semibold text-yellow-200">Royal Mandala</div>
+            </div>
+            <div class="rakhi-option cursor-pointer p-3 rounded-xl border border-yellow-500/30 bg-maroon-900/40 transition-all text-center" data-rakhi="pearl">
+              <div class="text-3xl mb-1">🌸</div>
+              <div class="text-xs font-semibold text-yellow-200">Pearl Rose</div>
+            </div>
+            <div class="rakhi-option cursor-pointer p-3 rounded-xl border border-yellow-500/30 bg-maroon-900/40 transition-all text-center" data-rakhi="superstar">
+              <div class="text-3xl mb-1">⭐</div>
+              <div class="text-xs font-semibold text-yellow-200">Golden Silk</div>
+            </div>
+          </div>
+
+          <!-- Wrist Canvas & Diya Display -->
+          <div class="relative flex flex-col items-center justify-center mb-8">
+            <!-- Diya Lamp Flame -->
+            <div class="flex items-center gap-2 mb-2">
+              <div class="diya-flame"></div>
+              <span class="text-xs font-medium text-yellow-300">Pavitra Aarti Light</span>
+            </div>
+
+            <!-- Canvas -->
+            <canvas id="wrist-canvas" class="rounded-2xl shadow-2xl border border-yellow-500/30 max-w-full bg-maroon-950/80"></canvas>
+
+            <!-- Blessing Banner -->
+            <div id="rakhi-blessing-banner" class="hidden mt-4 p-3.5 rounded-xl bg-yellow-500/20 border border-yellow-400 text-yellow-200 text-sm font-semibold max-w-md">
+              ✨ Sacred Rakhi Tied! May <span class="display-sister-name font-bold">Priya</span> always be blessed with joy, success, and protection! ✨
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <button id="tie-rakhi-btn" class="btn-gold px-10 py-4 rounded-full text-lg font-bold shadow-xl">
+            ✨ Tie Rakhi on Sister's Wrist ✨
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: VIRTUAL MITHAI THALI (SWEETS BOX) -->
+    <section class="py-12 sm:py-16 px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="festive-glass p-6 sm:p-10">
+          <h2 class="text-2xl sm:text-4xl font-bold gold-shimmer mb-2" style="font-family: var(--font-heading);">
+            🍬 Sweet Treats Thali (Mithai Box)
+          </h2>
+          <p class="text-sm sm:text-base text-yellow-200/80 mb-8">
+            Raksha Bandhan is incomplete without sweet treats! Click any sweet below to feed <span class="display-sister-name font-semibold">Priya</span>!
+          </p>
+
+          <!-- Brass Thali Tray -->
+          <div class="relative bg-gradient-to-b from-yellow-700/40 via-yellow-600/20 to-yellow-800/50 p-6 sm:p-10 rounded-full border-4 border-yellow-500/60 shadow-2xl max-w-xl mx-auto flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+            
+            <div class="mithai-item text-center" data-sweet="kajukatli">
+              <div class="text-4xl sm:text-5xl mb-1">🥮</div>
+              <div class="text-xs font-semibold text-yellow-200">Kaju Katli</div>
+            </div>
+
+            <div class="mithai-item text-center" data-sweet="laddu">
+              <div class="text-4xl sm:text-5xl mb-1">🟠</div>
+              <div class="text-xs font-semibold text-yellow-200">Motichoor Laddu</div>
+            </div>
+
+            <div class="mithai-item text-center" data-sweet="gulabjamun">
+              <div class="text-4xl sm:text-5xl mb-1">🟤</div>
+              <div class="text-xs font-semibold text-yellow-200">Gulab Jamun</div>
+            </div>
+
+            <div class="mithai-item text-center" data-sweet="jalebi">
+              <div class="text-4xl sm:text-5xl mb-1">🌀</div>
+              <div class="text-xs font-semibold text-yellow-200">Crispy Jalebi</div>
+            </div>
+
+            <div class="mithai-item text-center" data-sweet="rasgulla">
+              <div class="text-4xl sm:text-5xl mb-1">⚪</div>
+              <div class="text-xs font-semibold text-yellow-200">Soft Rasgulla</div>
+            </div>
+
+          </div>
+
+          <div id="mithai-feedback" class="hidden mt-6 text-base sm:text-lg font-bold text-yellow-300">
+            Yum! Sweet treat fed! 😋
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: BROTHER'S SACRED PROMISES (FLIP VOUCHERS) -->
+    <section id="vouchers-section" class="py-12 sm:py-20 px-4">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-5xl font-bold gold-shimmer mb-3" style="font-family: var(--font-heading);">
+            📜 Brother's Sacred Promises
+          </h2>
+          <p class="text-sm sm:text-base text-yellow-200/80 max-w-xl mx-auto">
+            These vouchers are legally binding sibling promises! Tap any card to flip and redeem your brother's commitment.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          
+          <!-- Voucher 1 -->
+          <div class="voucher-card">
+            <div class="voucher-inner">
+              <div class="voucher-front">
+                <div class="text-left text-xs font-bold text-yellow-400 tracking-widest uppercase">Voucher #01</div>
+                <div class="my-auto">
+                  <div class="text-4xl mb-2">🍦</div>
+                  <h3 class="text-xl font-bold text-yellow-100">Unlimited Treat Pass</h3>
+                </div>
+                <div class="text-xs text-yellow-300/70">Click card to redeem promise</div>
+              </div>
+              <div class="voucher-back">
+                <div class="text-left text-xs font-bold text-yellow-300">REDEEMABLE ANYTIME</div>
+                <div class="my-auto">
+                  <p class="text-sm text-yellow-100">"Brother agrees to sponsor ice cream, coffee, or favorite snacks whenever requested!"</p>
+                </div>
+                <div>
+                  <span class="stamp-redeemed">REDEEMED ✔️</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Voucher 2 -->
+          <div class="voucher-card">
+            <div class="voucher-inner">
+              <div class="voucher-front">
+                <div class="text-left text-xs font-bold text-yellow-400 tracking-widest uppercase">Voucher #02</div>
+                <div class="my-auto">
+                  <div class="text-4xl mb-2">📺</div>
+                  <h3 class="text-xl font-bold text-yellow-100">TV Remote Truce</h3>
+                </div>
+                <div class="text-xs text-yellow-300/70">Click card to redeem promise</div>
+              </div>
+              <div class="voucher-back">
+                <div class="text-left text-xs font-bold text-yellow-300">7-DAY PASS</div>
+                <div class="my-auto">
+                  <p class="text-sm text-yellow-100">"Brother surrenders all rights to TV remote & channel fighting for one full week!"</p>
+                </div>
+                <div>
+                  <span class="stamp-redeemed">REDEEMED ✔️</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Voucher 3 -->
+          <div class="voucher-card">
+            <div class="voucher-inner">
+              <div class="voucher-front">
+                <div class="text-left text-xs font-bold text-yellow-400 tracking-widest uppercase">Voucher #03</div>
+                <div class="my-auto">
+                  <div class="text-4xl mb-2">📞</div>
+                  <h3 class="text-xl font-bold text-yellow-100">24/7 Emergency Listener</h3>
+                </div>
+                <div class="text-xs text-yellow-300/70">Click card to redeem promise</div>
+              </div>
+              <div class="voucher-back">
+                <div class="text-left text-xs font-bold text-yellow-300">ALWAYS ON CALL</div>
+                <div class="my-auto">
+                  <p class="text-sm text-yellow-100">"Guaranteed late-night listening ear for gossip, venting, or emergency advice."</p>
+                </div>
+                <div>
+                  <span class="stamp-redeemed">REDEEMED ✔️</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Voucher 4 -->
+          <div class="voucher-card">
+            <div class="voucher-inner">
+              <div class="voucher-front">
+                <div class="text-left text-xs font-bold text-yellow-400 tracking-widest uppercase">Voucher #04</div>
+                <div class="my-auto">
+                  <div class="text-4xl mb-2">🛍️</div>
+                  <h3 class="text-xl font-bold text-yellow-100">Sponsored Shopping Spree</h3>
+                </div>
+                <div class="text-xs text-yellow-300/70">Click card to redeem promise</div>
+              </div>
+              <div class="voucher-back">
+                <div class="text-left text-xs font-bold text-yellow-300">1 GIFT ITEM</div>
+                <div class="my-auto">
+                  <p class="text-sm text-yellow-100">"Brother will purchase one item on your online wishlist, no questions asked!"</p>
+                </div>
+                <div>
+                  <span class="stamp-redeemed">REDEEMED ✔️</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Voucher 5 -->
+          <div class="voucher-card">
+            <div class="voucher-inner">
+              <div class="voucher-front">
+                <div class="text-left text-xs font-bold text-yellow-400 tracking-widest uppercase">Voucher #05</div>
+                <div class="my-auto">
+                  <div class="text-4xl mb-2">🧸</div>
+                  <h3 class="text-xl font-bold text-yellow-100">Unconditional Apology</h3>
+                </div>
+                <div class="text-xs text-yellow-300/70">Click card to redeem promise</div>
+              </div>
+              <div class="voucher-back">
+                <div class="text-left text-xs font-bold text-yellow-300">INSTANT TRUCE</div>
+                <div class="my-auto">
+                  <p class="text-sm text-yellow-100">"Instant apology and warm bear hug during any future sibling argument!"</p>
+                </div>
+                <div>
+                  <span class="stamp-redeemed">REDEEMED ✔️</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Voucher 6 -->
+          <div class="voucher-card">
+            <div class="voucher-inner">
+              <div class="voucher-front">
+                <div class="text-left text-xs font-bold text-yellow-400 tracking-widest uppercase">Voucher #06</div>
+                <div class="my-auto">
+                  <div class="text-4xl mb-2">🤫</div>
+                  <h3 class="text-xl font-bold text-yellow-100">Vault of Secrets</h3>
+                </div>
+                <div class="text-xs text-yellow-300/70">Click card to redeem promise</div>
+              </div>
+              <div class="voucher-back">
+                <div class="text-left text-xs font-bold text-yellow-300">100% CONFIDENTIAL</div>
+                <div class="my-auto">
+                  <p class="text-sm text-yellow-100">"Your deepest secrets will remain 100% safe with your brother forever."</p>
+                </div>
+                <div>
+                  <span class="stamp-redeemed">REDEEMED ✔️</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: SISTER MEMORY LANE PHOTO GALLERY -->
+    <section class="py-12 sm:py-20 px-4">
+      <div class="max-w-5xl mx-auto text-center">
+        <h2 class="text-3xl sm:text-5xl font-bold gold-shimmer mb-3" style="font-family: var(--font-heading);">
+          📸 Sibling Memory Lane
+        </h2>
+        <p class="text-sm sm:text-base text-yellow-200/80 mb-8">
+          A glimpse of our cherished moments! Upload your real photo below to replace memory cards.
+        </p>
+
+        <!-- Upload Tool -->
+        <div class="mb-10 inline-block">
+          <label for="photo-upload" class="btn-outline-gold px-6 py-2.5 rounded-full text-sm font-semibold cursor-pointer inline-flex items-center gap-2">
+            <span>📷 Replace Photo With Real Memory</span>
+          </label>
+          <input type="file" id="photo-upload" accept="image/*" class="hidden">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 max-w-4xl mx-auto">
+          
+          <!-- Polaroid 1 -->
+          <div class="polaroid-card" style="--rotation: -3deg;">
+            <img id="polaroid-img-1" src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=800&auto=format&fit=crop" alt="Memory 1" class="polaroid-img-box">
+            <div class="polaroid-caption">Laughter & Fights 💖</div>
+          </div>
+
+          <!-- Polaroid 2 -->
+          <div class="polaroid-card" style="--rotation: 2deg;">
+            <img id="polaroid-img-2" src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=800&auto=format&fit=crop" alt="Memory 2" class="polaroid-img-box">
+            <div class="polaroid-caption">Partners in Crime ✨</div>
+          </div>
+
+          <!-- Polaroid 3 -->
+          <div class="polaroid-card" style="--rotation: -2deg;">
+            <img id="polaroid-img-3" src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800&auto=format&fit=crop" alt="Memory 3" class="polaroid-img-box">
+            <div class="polaroid-caption">Always Protected 🛡️</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: HEART-TO-HEART WISH LETTER -->
+    <section class="py-12 sm:py-20 px-4">
+      <div class="max-w-3xl mx-auto">
+        <div class="festive-glass p-8 sm:p-12 relative overflow-hidden border-2 border-yellow-500/40">
+          <div class="text-right text-xs text-yellow-400/80 tracking-widest uppercase font-semibold mb-6">
+            A Letter From Your Brother 💌
+          </div>
+
+          <h3 class="text-3xl sm:text-4xl font-bold text-yellow-100 mb-6" style="font-family: var(--font-serif);">
+            Dearest <span class="display-sister-name">Priya</span>,
+          </h3>
+
+          <p id="typewriter-wish" class="text-lg sm:text-2xl text-yellow-100/90 leading-relaxed font-light mb-8 italic" style="font-family: var(--font-handwriting); font-size: 2rem;">
+            To the sister who knows all my secrets, shares every laugh, and brings endless brightness into my life—Happy Raksha Bandhan! May your life be filled with happiness, health, and infinite treats.
+          </p>
+
+          <div class="text-right">
+            <div class="text-sm text-yellow-300/80">Forever by your side,</div>
+            <div class="text-2xl font-bold text-yellow-300 gold-shimmer" style="font-family: var(--font-heading);">
+              <span class="display-brother-name">Manish</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: DOWNLOAD GREETING CARD GENERATOR -->
+    <section class="py-12 sm:py-20 px-4 text-center">
+      <div class="max-w-3xl mx-auto festive-glass p-8 sm:p-12">
+        <h2 class="text-2xl sm:text-4xl font-bold gold-shimmer mb-3" style="font-family: var(--font-heading);">
+          🎨 Download Customized Wish Card
+        </h2>
+        <p class="text-sm sm:text-base text-yellow-200/80 mb-8">
+          Save an HD Raksha Bandhan greeting card with your names & wish to share on WhatsApp or Instagram!
+        </p>
+
+        <button id="download-card-btn" class="btn-gold px-10 py-4 rounded-full text-lg font-bold shadow-2xl flex items-center gap-3 mx-auto">
+          <span>📥 Download HD Wish Card (PNG)</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-8 text-center text-xs sm:text-sm text-yellow-200/60 border-t border-yellow-500/20">
+      Made with ❤️ for Raksha Bandhan Celebration
+    </footer>
+
+  </div>
+
+  <!-- ==========================================
+       PERSONALIZATION CUSTOMIZATION MODAL
+       ========================================== -->
+  <div id="custom-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="festive-glass p-6 sm:p-8 max-w-lg w-full rounded-2xl relative border-2 border-yellow-400">
+      <h3 class="text-2xl font-bold gold-shimmer mb-4" style="font-family: var(--font-heading);">
+        ⚙️ Customize Wish & Names
+      </h3>
+
+      <div class="space-y-4 text-left mb-6">
+        <div>
+          <label class="block text-xs font-semibold text-yellow-300 uppercase mb-1">Sister's Name</label>
+          <input type="text" id="input-sister-name" class="w-full px-4 py-2.5 rounded-xl bg-maroon-950 border border-yellow-500/40 text-yellow-100 focus:outline-none focus:border-yellow-400" placeholder="e.g. Priya">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-yellow-300 uppercase mb-1">Brother's Name</label>
+          <input type="text" id="input-brother-name" class="w-full px-4 py-2.5 rounded-xl bg-maroon-950 border border-yellow-500/40 text-yellow-100 focus:outline-none focus:border-yellow-400" placeholder="e.g. Manish">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-yellow-300 uppercase mb-1">Personalized Message</label>
+          <textarea id="input-custom-wish" rows="3" class="w-full px-4 py-2.5 rounded-xl bg-maroon-950 border border-yellow-500/40 text-yellow-100 focus:outline-none focus:border-yellow-400" placeholder="Type your heartfelt wish here..."></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3">
+        <button id="close-custom-modal-btn" class="px-5 py-2 rounded-full border border-yellow-500/30 text-yellow-300 text-sm">
+          Cancel
+        </button>
+        <button id="save-custom-btn" class="btn-gold px-6 py-2 rounded-full text-sm font-bold">
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/particles.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/rakhi-canvas.js"></script>
+  <script src="js/card-generator.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
