@@ -760,19 +760,76 @@ export default function CreateBirthdayPage() {
         </form>
       </div>
 
-      {/* LIVE PREVIEW MODAL */}
+      {/* LIVE PREVIEW MODAL WITH INTERACTIVE CONTROL BAR */}
       <AnimatePresence>
         {showPreview && (
           <div className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md">
-            <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+            {/* Top Control Bar */}
+            <div className="fixed top-4 inset-x-4 max-w-4xl mx-auto z-50 flex items-center justify-between gap-3 bg-black/80 border border-white/20 p-3 rounded-full shadow-2xl backdrop-blur-xl">
+              <div className="flex items-center gap-2 pl-3">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
+                </span>
+                <span className="text-xs font-bold text-white tracking-wide">Live Preview Mode</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowPreview(false)}
+                  className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full border border-white/20 text-xs font-semibold flex items-center gap-2 transition-all hover:scale-105"
+                >
+                  <ArrowLeft className="w-4 h-4 text-purple-300" />
+                  <span>Back to Editing</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    setShowPreview(false);
+                    handleSubmit(e);
+                  }}
+                  disabled={loading}
+                  className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:to-indigo-600 text-white px-5 py-2 rounded-full text-xs font-bold shadow-lg border border-white/20 transition-all hover:scale-105 flex items-center gap-2 disabled:opacity-50"
+                >
+                  {loading ? (
+                    <span>Creating...</span>
+                  ) : (
+                    <>
+                      <Check className="w-4 h-4 text-emerald-300" />
+                      <span>Confirm & Create Website</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Bottom Floating Quick Bar */}
+            <div className="fixed bottom-6 inset-x-4 max-w-md mx-auto z-50 flex items-center justify-center gap-3 bg-black/85 border border-pink-500/30 p-2.5 rounded-full shadow-2xl backdrop-blur-xl">
               <button
+                type="button"
                 onClick={() => setShowPreview(false)}
-                className="bg-black/70 hover:bg-black text-white px-4 py-2 rounded-full border border-white/20 text-xs font-semibold flex items-center gap-2 shadow-xl"
+                className="flex-1 text-center py-2 text-xs font-semibold text-purple-200 hover:text-white transition-colors flex items-center justify-center gap-1"
               >
-                <X className="w-4 h-4" />
-                <span>Exit Preview</span>
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Edit More</span>
+              </button>
+              <div className="h-4 w-px bg-white/20" />
+              <button
+                type="button"
+                onClick={(e) => {
+                  setShowPreview(false);
+                  handleSubmit(e);
+                }}
+                disabled={loading}
+                className="flex-1 text-center py-2 text-xs font-bold text-pink-400 hover:text-pink-300 transition-colors flex items-center justify-center gap-1"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-pink-400" />
+                <span>Confirm & Publish</span>
               </button>
             </div>
+
             <BirthdayView birthday={formData} />
           </div>
         )}
