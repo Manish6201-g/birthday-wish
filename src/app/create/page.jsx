@@ -70,16 +70,21 @@ export default function CreateBirthdayPage() {
   });
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    fetch("/api/auth/me", {
+      cache: "no-store",
+      headers: {
+        "Cache-Control": "no-cache",
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated) {
           setUser(data.user);
         } else {
-          router.push("/login");
+          router.push("/login?redirect=/create");
         }
       })
-      .catch(() => router.push("/login"))
+      .catch(() => router.push("/login?redirect=/create"))
       .finally(() => setCheckingAuth(false));
   }, []);
 

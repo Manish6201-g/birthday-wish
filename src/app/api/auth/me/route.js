@@ -12,27 +12,35 @@ export async function GET(request) {
       return NextResponse.json({ authenticated: false, user: null });
     }
 
-    await dbConnect();
-    const dbUser = await User.findById(authUser.id).select("-password");
-
-    if (!dbUser) {
-      return NextResponse.json({ authenticated: false, user: null });
+    let dbUser = null;
+    try {
+      await dbConnect();
+      if (authUser.id) {
+        dbUser = await User.findById(authUser.id).select("-password").lean();
+      }
+      if (!dbUser && authUser.email) {
+        dbUser = await User.findOne({ email: authUser.email.toLowerCase() }).select("-password").lean();
+      }
+    } catch (dbErr) {
+      console.error("MongoDB check in /api/auth/me error (using JWT fallback):", dbErr);
     }
 
+    const email = (dbUser?.email || authUser.email || "").toLowerCase().trim();
     const allowedEmailsEnv = process.env.ALLOWED_EMAILS || process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL;
     const allowedList = allowedEmailsEnv.split(",").map((e) => e.trim().toLowerCase());
-    const isOwner = allowedList.includes(dbUser.email.toLowerCase());
+    const isOwner = email === PRIMARY_ADMIN_EMAIL.toLowerCase() || allowedList.includes(email);
 
     const userPayload = {
-      id: dbUser._id,
-      name: dbUser.name,
-      email: dbUser.email,
-      role: isOwner ? "admin" : (dbUser.role || "user"),
-      canCreate: isOwner || (dbUser.canCreate ?? false),
+      id: dbUser?._id || authUser.id,
+      name: dbUser?.name || authUser.name || "User",
+      email: email,
+      role: isOwner ? "admin" : (dbUser?.role || authUser.role || "user"),
+      canCreate: isOwner || (dbUser?.canCreate ?? (authUser.canCreate ?? false)),
     };
 
     return NextResponse.json({ authenticated: true, user: userPayload });
   } catch (error) {
+    console.error("Auth me endpoint error:", error);
     return NextResponse.json({ authenticated: false, user: null });
   }
 }

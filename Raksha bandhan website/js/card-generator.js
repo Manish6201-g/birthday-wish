@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Raksha Bandhan HD Downloadable Greeting Card Generator (Canvas)
+   HD Canvas Greeting Card Generator (1080x1350 PNG Exporter with Multi-Theme)
    ========================================================================== */
 
 class CardGenerator {
@@ -10,179 +10,140 @@ class CardGenerator {
     this.ctx = this.canvas.getContext('2d');
   }
 
-  generateCard(sisterName = 'Dearest Sister', brotherName = 'Your Loving Brother', customWish = '') {
-    const w = this.canvas.width;
-    const h = this.canvas.height;
-    const ctx = this.ctx;
+  downloadCard(sisterName, brotherName, customWish, theme = 'royal') {
+    if (!this.ctx) return;
 
-    // 1. Rich Festive Background Gradient
-    const bgGrad = ctx.createRadialGradient(w / 2, h / 2, 100, w / 2, h / 2, 800);
-    bgGrad.addColorStop(0, '#520516');
-    bgGrad.addColorStop(0.6, '#370617');
-    bgGrad.addColorStop(1, '#120106');
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, w, h);
-
-    // 2. Ornate Golden Borders & Corner Flourishes
-    ctx.save();
-    ctx.strokeStyle = '#FFD700';
-    ctx.lineWidth = 8;
-    ctx.strokeRect(40, 40, w - 80, h - 80);
-
-    ctx.strokeStyle = 'rgba(255, 215, 0, 0.4)';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(55, 55, w - 110, h - 110);
-    ctx.restore();
-
-    // Corner Ornaments
-    this.drawCornerFlourish(ctx, 60, 60, 0);
-    this.drawCornerFlourish(ctx, w - 60, 60, Math.PI / 2);
-    this.drawCornerFlourish(ctx, w - 60, h - 60, Math.PI);
-    this.drawCornerFlourish(ctx, 60, h - 60, -Math.PI / 2);
-
-    // 3. Title Header
-    ctx.save();
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#FFD700';
-    ctx.font = 'bold 44px "Cinzel", serif';
-    ctx.fillText('HAPPY RAKSHA BANDHAN', w / 2, 160);
-
-    ctx.fillStyle = '#FFFBF4';
-    ctx.font = 'bold 64px "Playfair Display", serif';
-    ctx.fillText(sisterName, w / 2, 240);
-    ctx.restore();
-
-    // 4. Detailed Centerpiece Rakhi Drawing
-    this.drawCardRakhi(ctx, w / 2, 450);
-
-    // 5. Heart-touching Message Box
-    ctx.save();
-    const defaultWish = customWish || "May the sacred thread of Rakhi always protect you, bring endless joy, and remind you that you'll always have a brother standing by your side!";
-    
-    ctx.fillStyle = 'rgba(255, 215, 0, 0.08)';
-    ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.roundRect(120, 680, w - 240, 420, 20);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#FFFBF4';
-    ctx.font = 'italic 34px "Playfair Display", serif';
-
-    // Wrap text into multiple lines
-    this.wrapText(ctx, `"${defaultWish}"`, w / 2, 760, w - 320, 48);
-
-    // 6. Sign Off / From Brother
-    ctx.fillStyle = '#FFD700';
-    ctx.font = 'bold 40px "Cinzel", serif';
-    ctx.fillText(`WITH INFINITE LOVE,`, w / 2, 1160);
-
-    ctx.fillStyle = '#FFF2A1';
-    ctx.font = 'italic bold 48px "Playfair Display", serif';
-    ctx.fillText(brotherName, w / 2, 1230);
-    ctx.restore();
-
-    return this.canvas.toDataURL('image/png');
-  }
-
-  drawCornerFlourish(ctx, x, y, rotation) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(rotation);
-    ctx.strokeStyle = '#FFD700';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(40, 0);
-    ctx.moveTo(0, 0);
-    ctx.lineTo(0, 40);
-    ctx.arc(20, 20, 20, Math.PI, Math.PI * 1.5);
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  drawCardRakhi(ctx, x, y) {
-    ctx.save();
-    
-    // Silk Thread
-    ctx.strokeStyle = '#D4AF37';
-    ctx.lineWidth = 10;
-    ctx.beginPath();
-    ctx.moveTo(x - 300, y);
-    ctx.lineTo(x + 300, y);
-    ctx.stroke();
-
-    ctx.strokeStyle = '#9D0208';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(x - 300, y - 4);
-    ctx.lineTo(x + 300, y - 4);
-    ctx.stroke();
-
-    // Outer Petals Mandala
-    for (let i = 0; i < 16; i++) {
-      const angle = (i * Math.PI * 2) / 16;
-      const px = x + Math.cos(angle) * 110;
-      const py = y + Math.sin(angle) * 110;
-
-      ctx.fillStyle = i % 2 === 0 ? '#9D0208' : '#FFD700';
-      ctx.beginPath();
-      ctx.arc(px, py, 26, 0, Math.PI * 2);
-      ctx.fill();
+    // Background Themes
+    if (theme === 'sunset') {
+      const grad = this.ctx.createLinearGradient(0, 0, 1080, 1350);
+      grad.addColorStop(0, '#7A1C08');
+      grad.addColorStop(0.5, '#4A0818');
+      grad.addColorStop(1, '#1A0208');
+      this.ctx.fillStyle = grad;
+    } else if (theme === 'emerald') {
+      const grad = this.ctx.createLinearGradient(0, 0, 1080, 1350);
+      grad.addColorStop(0, '#064E3B');
+      grad.addColorStop(0.5, '#2D030E');
+      grad.addColorStop(1, '#0F172A');
+      this.ctx.fillStyle = grad;
+    } else {
+      // Royal Maroon (Default)
+      const grad = this.ctx.createRadialGradient(540, 675, 50, 540, 675, 750);
+      grad.addColorStop(0, '#52091A');
+      grad.addColorStop(0.6, '#2D030E');
+      grad.addColorStop(1, '#120105');
+      this.ctx.fillStyle = grad;
     }
+    this.ctx.fillRect(0, 0, 1080, 1350);
 
-    // Gold Center Ring
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath();
-    ctx.arc(x, y, 90, 0, Math.PI * 2);
-    ctx.fill();
+    // Golden Outer Border
+    this.ctx.strokeStyle = '#FFD700';
+    this.ctx.lineWidth = 14;
+    this.ctx.strokeRect(50, 50, 980, 1250);
 
-    // Inner Maroon Gem
-    ctx.fillStyle = '#6A040F';
-    ctx.beginPath();
-    ctx.arc(x, y, 60, 0, Math.PI * 2);
-    ctx.fill();
+    this.ctx.strokeStyle = '#D4AF37';
+    this.ctx.lineWidth = 4;
+    this.ctx.strokeRect(70, 70, 940, 1210);
 
-    // Center Pearl
-    ctx.fillStyle = '#FFFBF4';
-    ctx.beginPath();
-    ctx.arc(x, y, 25, 0, Math.PI * 2);
-    ctx.fill();
+    // Corner Filigree Ornaments
+    this.drawCornerFiligree(90, 90);
+    this.drawCornerFiligree(990, 90, true, false);
+    this.drawCornerFiligree(90, 1260, false, true);
+    this.drawCornerFiligree(990, 1260, true, true);
 
-    ctx.restore();
+    // Top Header Badge
+    this.ctx.fillStyle = '#FFD700';
+    this.ctx.font = 'bold 36px serif';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('✨ RAKSHA BANDHAN CELEBRATION ✨', 540, 180);
+
+    // Main Diya Icon
+    this.ctx.font = '72px serif';
+    this.ctx.fillText('🪔', 540, 270);
+
+    // Greeting Title
+    this.ctx.fillStyle = '#FFF6BD';
+    this.ctx.font = 'bold 64px serif';
+    this.ctx.fillText(`Happy Raksha Bandhan,`, 540, 370);
+
+    this.ctx.fillStyle = '#FFD700';
+    this.ctx.font = 'italic bold 80px serif';
+    this.ctx.fillText(`${sisterName}! 🌸`, 540, 480);
+
+    // Divider Line
+    this.ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+    this.ctx.lineWidth = 3;
+    this.ctx.beginPath();
+    this.ctx.moveTo(340, 530);
+    this.ctx.lineTo(740, 530);
+    this.ctx.stroke();
+
+    // Heartfelt Message Box
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+    this.ctx.font = 'italic 42px serif';
+    
+    const lines = this.wrapText(customWish || 'Wishing you a joyful, blessed, and love-filled Raksha Bandhan!', 800);
+    let startY = 620;
+    lines.forEach(line => {
+      this.ctx.fillText(`"${line}"`, 540, startY);
+      startY += 60;
+    });
+
+    // Brother Signature
+    this.ctx.fillStyle = '#FFF6BD';
+    this.ctx.font = '32px sans-serif';
+    this.ctx.fillText('With Endless Love & Protection,', 540, 1020);
+
+    this.ctx.fillStyle = '#FFD700';
+    this.ctx.font = 'bold 64px serif';
+    this.ctx.fillText(`- ${brotherName} 💖`, 540, 1110);
+
+    // Bottom Decorative Footer
+    this.ctx.fillStyle = 'rgba(255, 215, 0, 0.7)';
+    this.ctx.font = '24px sans-serif';
+    this.ctx.fillText('Sacred Bond of Brother & Sister', 540, 1220);
+
+    // Download Canvas PNG Link
+    const link = document.createElement('a');
+    link.download = `Raksha_Bandhan_${sisterName}.png`;
+    link.href = this.canvas.toDataURL('image/png');
+    link.click();
   }
 
-  wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  drawCornerFiligree(x, y, flipX = false, flipY = false) {
+    this.ctx.save();
+    this.ctx.translate(x, y);
+    this.ctx.scale(flipX ? -1 : 1, flipY ? -1 : 1);
+
+    this.ctx.strokeStyle = '#FFD700';
+    this.ctx.lineWidth = 4;
+    this.ctx.beginPath();
+    this.ctx.arc(0, 0, 40, 0, Math.PI / 2);
+    this.ctx.stroke();
+
+    this.ctx.restore();
+  }
+
+  wrapText(text, maxWidth) {
     const words = text.split(' ');
-    let line = '';
+    const lines = [];
+    let currentLine = words[0];
 
-    for (let n = 0; n < words.length; n++) {
-      const testLine = line + words[n] + ' ';
-      const metrics = ctx.measureText(testLine);
-      const testWidth = metrics.width;
-
-      if (testWidth > maxWidth && n > 0) {
-        ctx.fillText(line, x, y);
-        line = words[n] + ' ';
-        y += lineHeight;
+    for (let i = 1; i < words.length; i++) {
+      const word = words[i];
+      const width = this.ctx.measureText(currentLine + ' ' + word).width;
+      if (width < maxWidth) {
+        currentLine += ' ' + word;
       } else {
-        line = testLine;
+        lines.push(currentLine);
+        currentLine = word;
       }
     }
-    ctx.fillText(line, x, y);
-  }
-
-  downloadCard(sisterName, brotherName, customWish) {
-    const dataUrl = this.generateCard(sisterName, brotherName, customWish);
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = `Raksha_Bandhan_Wish_${sisterName.replace(/\s+/g, '_')}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    lines.push(currentLine);
+    return lines;
   }
 }
 
-window.cardGenerator = new CardGenerator();
+window.addEventListener('DOMContentLoaded', () => {
+  window.cardGenerator = new CardGenerator();
+});

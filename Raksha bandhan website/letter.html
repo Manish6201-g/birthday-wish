@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wish Letter & Card Exporter | Step 4 of 4</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="relative min-h-screen selection:bg-yellow-500 selection:text-red-950">
+
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <div class="content-wrapper flex flex-col min-h-screen">
+    
+    <header class="sticky top-0 z-40 w-full backdrop-blur-lg bg-maroon-950/80 border-b border-yellow-500/30 py-3 px-4 sm:px-8">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+        
+        <div class="flex items-center gap-6">
+          <a href="index.html" class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-600 to-yellow-300 flex items-center justify-center text-maroon-950 font-bold shadow-md">
+              🪔
+            </div>
+            <span class="text-lg sm:text-2xl font-bold gold-shimmer tracking-wider" style="font-family: var(--font-heading);">
+              Raksha Bandhan
+            </span>
+          </a>
+
+          <nav class="hidden md:flex items-center gap-4 text-xs sm:text-sm">
+            <a href="index.html" data-nav class="py-1 text-yellow-200/80 transition-all hover:text-yellow-400">Step 1: Welcome</a>
+            <a href="sweets.html" data-nav class="py-1 text-yellow-200/80 transition-all hover:text-yellow-400">Step 2: Sweets</a>
+            <a href="gift.html" data-nav class="py-1 text-yellow-200/80 transition-all hover:text-yellow-400">Step 3: Gifts</a>
+            <a href="letter.html" data-nav class="py-1 text-yellow-300 font-bold border-b-2 border-yellow-400">Step 4: Letter</a>
+          </nav>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-4">
+          <button id="music-toggle-btn" class="px-3.5 py-2 rounded-full border border-yellow-500/40 text-xs sm:text-sm text-yellow-300 hover:bg-yellow-500/20 flex items-center gap-2">
+            <span>🎵 Sound: OFF</span>
+          </button>
+          <button id="share-link-btn" class="btn-gold px-4 py-2 rounded-full text-xs sm:text-sm">
+            <span>🔗 Share Link</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex md:hidden items-center justify-around border-t border-yellow-500/20 pt-2 mt-2 text-xs">
+        <a href="index.html" data-nav class="text-yellow-200/80">1. Home</a>
+        <a href="sweets.html" data-nav class="text-yellow-200/80">2. Sweets</a>
+        <a href="gift.html" data-nav class="text-yellow-200/80">3. Gifts</a>
+        <a href="letter.html" data-nav class="text-yellow-300 font-bold">4. Letter</a>
+      </div>
+    </header>
+
+    <!-- STEP TRACKER BAR -->
+    <div class="bg-yellow-500/10 border-b border-yellow-500/20 py-2.5 px-4 text-center text-xs text-yellow-300 font-semibold tracking-wider">
+      Step 4 of 4: Heartfelt Wish Letter & HD Card Exporter 💌
+    </div>
+
+    <!-- SECTION: HEART-TO-HEART LETTER & CARD GENERATOR -->
+    <main class="flex-grow py-12 sm:py-20 px-4">
+      <div class="max-w-3xl mx-auto space-y-12">
+        
+        <!-- Letter Card -->
+        <div class="festive-glass p-8 sm:p-12 relative overflow-hidden border-2 border-yellow-500/40">
+          <div class="text-right text-xs text-yellow-400/80 tracking-widest uppercase font-semibold mb-6">
+            A Letter From Your Brother 💌
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl font-bold text-yellow-100 mb-6" style="font-family: var(--font-serif);">
+            Dearest <span class="display-sister-name">Sneha</span>,
+          </h1>
+
+          <p id="typewriter-wish" class="text-lg sm:text-2xl text-yellow-100/90 leading-relaxed font-light mb-8 italic" style="font-family: var(--font-handwriting); font-size: 2rem;">
+            To the sister who knows all my secrets, shares every laugh, and brings endless brightness into my life—Happy Raksha Bandhan! May your life be filled with happiness, health, and infinite treats.
+          </p>
+
+          <div class="text-right">
+            <div class="text-sm text-yellow-300/80">Forever by your side,</div>
+            <div class="text-2xl font-bold text-yellow-300 gold-shimmer" style="font-family: var(--font-heading);">
+              <span class="display-brother-name">Manish</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Download Card Exporter & Theme Selector -->
+        <div class="festive-glass p-8 sm:p-12 text-center space-y-6">
+          <h2 class="text-2xl sm:text-4xl font-bold gold-shimmer mb-3" style="font-family: var(--font-heading);">
+            🎨 Download Customized Wish Card
+          </h2>
+          <p class="text-sm sm:text-base text-yellow-200/80">
+            Save an HD Raksha Bandhan greeting card with your names & wish to share on WhatsApp or Instagram!
+          </p>
+
+          <!-- Card Theme Selector -->
+          <div class="flex items-center justify-center gap-3 pt-2">
+            <span class="text-xs text-yellow-300 uppercase font-semibold">Card Theme:</span>
+            <button class="card-theme-btn px-3 py-1.5 rounded-full text-xs border border-yellow-400 text-yellow-200 bg-yellow-500/20" data-theme="royal">🔴 Royal Maroon</button>
+            <button class="card-theme-btn px-3 py-1.5 rounded-full text-xs border border-yellow-500/40 text-yellow-300/70" data-theme="sunset">🟡 Sunset Gold</button>
+            <button class="card-theme-btn px-3 py-1.5 rounded-full text-xs border border-yellow-500/40 text-yellow-300/70" data-theme="emerald">🟢 Emerald Green</button>
+          </div>
+
+          <button id="download-card-btn" class="btn-gold px-10 py-4 rounded-full text-lg font-bold shadow-2xl flex items-center gap-3 mx-auto">
+            <svg class="w-6 h-6 text-maroon-950" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span>Download HD Wish Card (PNG)</span>
+          </button>
+        </div>
+
+        <!-- Interconnected Step Navigation Controls -->
+        <div class="pt-6 flex flex-wrap items-center justify-between gap-4">
+          <a href="gift.html" data-nav class="btn-outline-gold px-6 py-3 rounded-full text-sm font-bold flex items-center gap-2">
+            <span>← Step 3: Gift Wishlist</span>
+          </a>
+
+          <a href="index.html" data-nav class="btn-gold px-8 py-3 rounded-full text-sm font-extrabold shadow-xl flex items-center gap-2">
+            <span>Restart Journey (Home) 🌸</span>
+          </a>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- FLOATING PETAL CANNON BUTTON -->
+    <button id="petal-cannon-btn" class="fixed bottom-6 right-6 z-40 btn-gold w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl border-2 border-yellow-300" title="Burst Celebration Flower Petals!">
+      🌸
+    </button>
+
+    <footer class="py-8 text-center text-xs sm:text-sm text-yellow-200/60 border-t border-yellow-500/20">
+      Made with ❤️ for Raksha Bandhan Celebration
+    </footer>
+
+  </div>
+
+  <script src="js/particles.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/card-generator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

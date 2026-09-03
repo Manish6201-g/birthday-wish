@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sister's Gift Wishlist | Step 3 of 4</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="relative min-h-screen selection:bg-yellow-500 selection:text-red-950">
+
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <div class="content-wrapper flex flex-col min-h-screen">
+    
+    <header class="sticky top-0 z-40 w-full backdrop-blur-lg bg-maroon-950/80 border-b border-yellow-500/30 py-3 px-4 sm:px-8">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+        
+        <div class="flex items-center gap-6">
+          <a href="index.html" class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-600 to-yellow-300 flex items-center justify-center text-maroon-950 font-bold shadow-md">
+              🪔
+            </div>
+            <span class="text-lg sm:text-2xl font-bold gold-shimmer tracking-wider" style="font-family: var(--font-heading);">
+              Raksha Bandhan
+            </span>
+          </a>
+
+          <nav class="hidden md:flex items-center gap-4 text-xs sm:text-sm">
+            <a href="index.html" data-nav class="py-1 text-yellow-200/80 transition-all hover:text-yellow-400">Step 1: Welcome</a>
+            <a href="sweets.html" data-nav class="py-1 text-yellow-200/80 transition-all hover:text-yellow-400">Step 2: Sweets</a>
+            <a href="gift.html" data-nav class="py-1 text-yellow-300 font-bold border-b-2 border-yellow-400">Step 3: Gifts</a>
+            <a href="letter.html" data-nav class="py-1 text-yellow-200/80 transition-all hover:text-yellow-400">Step 4: Letter</a>
+          </nav>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-4">
+          <button id="music-toggle-btn" class="px-3.5 py-2 rounded-full border border-yellow-500/40 text-xs sm:text-sm text-yellow-300 hover:bg-yellow-500/20 flex items-center gap-2">
+            <span>🎵 Sound: OFF</span>
+          </button>
+          <button id="share-link-btn" class="btn-gold px-4 py-2 rounded-full text-xs sm:text-sm">
+            <span>🔗 Share Link</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex md:hidden items-center justify-around border-t border-yellow-500/20 pt-2 mt-2 text-xs">
+        <a href="index.html" data-nav class="text-yellow-200/80">1. Home</a>
+        <a href="sweets.html" data-nav class="text-yellow-200/80">2. Sweets</a>
+        <a href="gift.html" data-nav class="text-yellow-300 font-bold">3. Gifts</a>
+        <a href="letter.html" data-nav class="text-yellow-200/80">4. Letter</a>
+      </div>
+    </header>
+
+    <!-- STEP TRACKER BAR -->
+    <div class="bg-yellow-500/10 border-b border-yellow-500/20 py-2.5 px-4 text-center text-xs text-yellow-300 font-semibold tracking-wider">
+      Step 3 of 4: Sister's Gift Wishlist 🎁
+    </div>
+
+    <!-- MAIN GIFT SECTION -->
+    <main class="flex-grow py-12 sm:py-20 px-4">
+      <div class="max-w-5xl mx-auto space-y-12">
+        
+        <div class="text-center">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-xs sm:text-sm font-semibold tracking-widest uppercase mb-4">
+            🎁 Sister's Gift Request Center
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl font-extrabold gold-shimmer mb-3" style="font-family: var(--font-heading);">
+            Sister's Wishlist & Gift Requests
+          </h1>
+          <p class="text-sm sm:text-base text-yellow-200/80 max-w-2xl mx-auto">
+            <span class="display-sister-name font-semibold text-yellow-300">Sneha</span> can add gift item requests, paste shop URLs (Amazon, Flipkart, etc.), and send the list to <span class="display-brother-name font-semibold text-yellow-300">Manish</span>!
+          </p>
+        </div>
+
+        <div class="festive-glass p-6 sm:p-10 border-2 border-yellow-500/40">
+          <h2 class="text-xl sm:text-2xl font-bold text-yellow-100 mb-4 flex items-center gap-2">
+            <span>✨ Add A New Gift Request</span>
+          </h2>
+
+          <!-- Quick Gift Idea Suggestion Chips -->
+          <div class="mb-6">
+            <div class="text-xs uppercase tracking-wider text-yellow-300/80 font-semibold mb-2">💡 Quick Add Ideas (Click to Fill):</div>
+            <div class="flex flex-wrap gap-2">
+              <button class="gift-chip px-3 py-1.5 rounded-full bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-xs text-yellow-200" data-title="Smartwatch" data-url="https://www.amazon.in" data-notes="Rose Gold Color">⌚ Smartwatch</button>
+              <button class="gift-chip px-3 py-1.5 rounded-full bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-xs text-yellow-200" data-title="Wireless Earbuds" data-url="https://www.flipkart.com" data-notes="Noise Cancellation">🎧 Earbuds</button>
+              <button class="gift-chip px-3 py-1.5 rounded-full bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-xs text-yellow-200" data-title="Designer Handbag" data-url="https://www.myntra.com" data-notes="Tan Brown Leather">👜 Handbag</button>
+              <button class="gift-chip px-3 py-1.5 rounded-full bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-xs text-yellow-200" data-title="Festive Kurti Suit Set" data-url="https://www.myntra.com" data-notes="Size Medium">👗 Ethnic Outfit</button>
+              <button class="gift-chip px-3 py-1.5 rounded-full bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-xs text-yellow-200" data-title="Premium Chocolate Gift Box" data-url="https://www.amazon.in" data-notes="Dark Chocolate">🍫 Chocolates</button>
+            </div>
+          </div>
+
+          <form id="gift-form" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="gift-title-input" class="block text-xs font-semibold text-yellow-300 uppercase mb-1">Gift Item Title *</label>
+                <input type="text" id="gift-title-input" required class="w-full px-4 py-3 rounded-xl bg-maroon-950 border border-yellow-500/40 text-yellow-100 placeholder-yellow-300/40 focus:outline-none focus:border-yellow-400 text-sm" placeholder="e.g. Smart Watch / Handbag / Shoes">
+              </div>
+
+              <div>
+                <label for="gift-url-input" class="block text-xs font-semibold text-yellow-300 uppercase mb-1">Gift Product Link (URL)</label>
+                <input type="url" id="gift-url-input" class="w-full px-4 py-3 rounded-xl bg-maroon-950 border border-yellow-500/40 text-yellow-100 placeholder-yellow-300/40 focus:outline-none focus:border-yellow-400 text-sm" placeholder="e.g. https://www.amazon.in/dp/...">
+              </div>
+            </div>
+
+            <div>
+              <label for="gift-notes-input" class="block text-xs font-semibold text-yellow-300 uppercase mb-1">Color / Size / Notes (Optional)</label>
+              <input type="text" id="gift-notes-input" class="w-full px-4 py-3 rounded-xl bg-maroon-950 border border-yellow-500/40 text-yellow-100 placeholder-yellow-300/40 focus:outline-none focus:border-yellow-400 text-sm" placeholder="e.g. Size M, Rose Gold Color, or specific model">
+            </div>
+
+            <div class="pt-2 flex justify-end">
+              <button type="submit" class="btn-gold px-8 py-3 rounded-full text-sm font-bold flex items-center gap-2 shadow-lg">
+                <span>🎁 Add to Sister's Wishlist</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div>
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <h2 class="text-2xl font-bold text-yellow-100" style="font-family: var(--font-heading);">
+                🎁 Requested Gifts List
+              </h2>
+              <span id="gift-counter-badge" class="px-3 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/40 text-xs font-bold text-yellow-300">
+                1 Item
+              </span>
+            </div>
+
+            <button id="send-whatsapp-gifts-btn" class="btn-gold px-6 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white">
+              <span>💬 Send Wishlist to Brother on WhatsApp</span>
+            </button>
+          </div>
+
+          <div id="gift-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Interconnected Step Navigation Controls -->
+        <div class="pt-8 flex flex-wrap items-center justify-between gap-4">
+          <a href="sweets.html" data-nav class="btn-outline-gold px-6 py-3 rounded-full text-sm font-bold flex items-center gap-2">
+            <span>← Step 2: Sweet Thali</span>
+          </a>
+
+          <a href="letter.html" data-nav class="btn-gold px-8 py-3.5 rounded-full text-base font-extrabold shadow-xl flex items-center gap-2">
+            <span>Proceed to Step 4: Heartfelt Wish Letter 💌</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- FLOATING PETAL CANNON BUTTON -->
+    <button id="petal-cannon-btn" class="fixed bottom-6 right-6 z-40 btn-gold w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl border-2 border-yellow-300" title="Burst Celebration Flower Petals!">
+      🌸
+    </button>
+
+    <footer class="py-8 text-center text-xs sm:text-sm text-yellow-200/60 border-t border-yellow-500/20">
+      Made with ❤️ for Raksha Bandhan Celebration
+    </footer>
+
+  </div>
+
+  <script src="js/particles.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/card-generator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
