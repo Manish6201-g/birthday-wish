@@ -10,6 +10,7 @@ import HappyBirthday from "./HappyBirthday";
 import PhotoGallery from "./PhotoGallery";
 import Letter from "./Letter";
 import MusicPlayer from "./MusicPlayer";
+import { CinematicFooter } from "@/components/ui/motion-footer";
 
 export default function BirthdayView({ birthday }) {
   const [currentScreen, setCurrentScreen] = useState(0);
@@ -67,9 +68,11 @@ export default function BirthdayView({ birthday }) {
   const secondaryColor = birthday?.theme?.secondaryColor || "#a855f7";
   const backgroundColor = birthday?.theme?.backgroundColor || "#090514";
 
+  const personName = birthday?.name || "Special Someone";
+
   return (
     <div
-      className="min-h-screen overflow-hidden relative transition-colors duration-700"
+      className="min-h-screen relative transition-colors duration-700 overflow-x-hidden"
       style={{
         backgroundColor: backgroundColor,
         backgroundImage: `radial-gradient(ellipse at top, ${backgroundColor}, #000000)`,
@@ -89,13 +92,25 @@ export default function BirthdayView({ birthday }) {
         }}
       />
 
-      <AnimatePresence mode="wait">
-        {isLoading ? (
-          <Loader key="loader" birthday={birthday} />
-        ) : (
-          <AnimatePresence mode="wait">{screens[currentScreen]}</AnimatePresence>
-        )}
-      </AnimatePresence>
+      <div className="relative z-10">
+        <AnimatePresence mode="wait">
+          {isLoading ? (
+            <Loader key="loader" birthday={birthday} />
+          ) : (
+            <AnimatePresence mode="wait">{screens[currentScreen]}</AnimatePresence>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Attach Cinematic Motion Footer on Final Screen */}
+      {!isLoading && currentScreen === 3 && (
+        <CinematicFooter
+          giantText={personName.toUpperCase()}
+          heading={`Celebrating ${personName}'s Special Day! 🎉`}
+          name={personName}
+          isPublicView={true}
+        />
+      )}
 
       {/* Floating Background Music Player */}
       <MusicPlayer musicConfig={birthday?.music} />
