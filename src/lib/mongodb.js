@@ -21,7 +21,8 @@ export async function dbConnect() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
-      serverSelectionTimeoutMS: 6000, // 6 seconds fast timeout instead of hanging 30s
+      family: 4, // Force IPv4 resolution
+      serverSelectionTimeoutMS: 6000,
       connectTimeoutMS: 6000,
     };
 
@@ -35,8 +36,13 @@ export async function dbConnect() {
   } catch (e) {
     cached.promise = null;
     console.error("MongoDB Atlas Connection Failed:", e.message);
+    if (e.message && e.message.includes("bad auth")) {
+      throw new Error(
+        "MongoDB Authentication Error: Invalid database username or password in MONGODB_URI. Please update Database Access credentials in MongoDB Atlas."
+      );
+    }
     throw new Error(
-      "Database connection timeout. Please check your MongoDB Atlas IP Whitelist (0.0.0.0/0) or cluster status."
+      "Database connection error. Please check MongoDB Atlas IP Whitelist (0.0.0.0/0) or cluster status."
     );
   }
 
