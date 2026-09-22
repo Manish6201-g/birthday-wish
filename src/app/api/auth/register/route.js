@@ -42,7 +42,14 @@ export async function POST(request) {
       );
     }
 
-    await dbConnect();
+    try {
+      await dbConnect();
+    } catch (dbErr) {
+      return NextResponse.json(
+        { error: "Database connection failed. Please check MongoDB Atlas IP Whitelist (0.0.0.0/0)." },
+        { status: 503 }
+      );
+    }
 
     const existingUser = await User.findOne({ email: cleanEmail });
     if (existingUser) {
@@ -75,7 +82,7 @@ export async function POST(request) {
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json(
-      { error: "Failed to register user" },
+      { error: error.message || "Failed to register user" },
       { status: 500 }
     );
   }

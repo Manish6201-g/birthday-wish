@@ -14,12 +14,19 @@ export async function POST(request) {
       );
     }
 
-    await dbConnect();
+    try {
+      await dbConnect();
+    } catch (dbErr) {
+      return NextResponse.json(
+        { error: "Database connection failed. Please ensure MongoDB Atlas IP Whitelist allows 0.0.0.0/0." },
+        { status: 503 }
+      );
+    }
 
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return NextResponse.json(
-        { error: "Invalid credentials" },
+        { error: "Invalid email or password" },
         { status: 401 }
       );
     }
@@ -27,7 +34,7 @@ export async function POST(request) {
     const isMatch = await comparePassword(password, user.password);
     if (!isMatch) {
       return NextResponse.json(
-        { error: "Invalid credentials" },
+        { error: "Invalid email or password" },
         { status: 401 }
       );
     }
@@ -42,7 +49,7 @@ export async function POST(request) {
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(
-      { error: "Failed to log in" },
+      { error: error.message || "Failed to log in" },
       { status: 500 }
     );
   }
