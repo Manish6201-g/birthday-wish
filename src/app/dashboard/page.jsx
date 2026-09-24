@@ -18,7 +18,9 @@ import {
   Sparkles,
   ExternalLink,
   AlertTriangle,
+  Flame,
 } from "lucide-react";
+import { CinematicFooter } from "@/components/ui/motion-footer";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -40,17 +42,17 @@ export default function DashboardPage() {
 
   const checkAuthAndLoadData = async () => {
     try {
-      const authRes = await fetch("/api/auth/me");
+      const authRes = await fetch("/api/auth/me", { cache: "no-store" });
       const authData = await authRes.json();
 
       if (!authData.authenticated) {
-        router.push("/login");
+        router.push("/login?redirect=/dashboard");
         return;
       }
 
       setUser(authData.user);
 
-      const bRes = await fetch("/api/birthdays");
+      const bRes = await fetch("/api/birthdays", { cache: "no-store" });
       if (bRes.ok) {
         const bData = await bRes.json();
         setBirthdays(bData.birthdays || []);
@@ -119,26 +121,37 @@ export default function DashboardPage() {
       <div className="min-h-screen bg-gradient-to-br from-purple-950 via-black to-purple-950 flex items-center justify-center">
         <div className="flex flex-col items-center">
           <Cake className="w-12 h-12 text-pink-400 animate-bounce mb-4" />
-          <p className="text-purple-300 text-lg">Loading your dashboard...</p>
+          <p className="text-purple-300 text-lg font-medium">Loading your dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-black to-purple-950 text-white relative p-4 sm:p-8 overflow-x-hidden">
-      {/* Background glow */}
-      <div className="fixed inset-0 z-0 blur-[150px] opacity-15 pointer-events-none bg-gradient-to-br from-pink-500 via-purple-600 to-indigo-500" />
+    <div className="relative w-full bg-gradient-to-br from-purple-950 via-black to-purple-950 text-white selection:bg-pink-500/30 overflow-x-hidden">
+      {/* Background radial glow */}
+      <div
+        className="fixed inset-0 z-0 blur-[150px] opacity-25 pointer-events-none"
+        style={{
+          backgroundImage: "radial-gradient(circle at 20% 25%, rgba(236, 72, 153, 0.5), transparent 45%)",
+        }}
+      />
+      <div
+        className="fixed inset-0 z-0 blur-[150px] opacity-25 pointer-events-none"
+        style={{
+          backgroundImage: "radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.5), transparent 45%)",
+        }}
+      />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <main className="relative z-10 w-full min-h-[110vh] max-w-6xl mx-auto px-4 sm:px-8 py-6 pb-20 border-b border-white/10 shadow-2xl">
         {/* Top Navbar */}
         <header className="flex flex-wrap items-center justify-between gap-4 mb-10 pb-6 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-tr from-pink-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-gradient-to-tr from-pink-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
               <Cake className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-purple-300">
+              <h1 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-purple-300">
                 Birthday Platform
               </h1>
               <p className="text-xs text-purple-300/70">
@@ -150,7 +163,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/create"
-              className="flex items-center gap-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:to-indigo-600 text-white px-5 py-2.5 rounded-full font-medium shadow-lg transition-all hover:scale-[102%] text-sm"
+              className="flex items-center gap-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:to-indigo-600 text-white px-5 py-2.5 rounded-full font-bold shadow-lg transition-all hover:scale-105 text-sm"
             >
               <Plus className="w-4 h-4" />
               <span>Create Birthday</span>
@@ -169,14 +182,15 @@ export default function DashboardPage() {
         {/* Dashboard Title & Stats */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div>
-            <h2 className="text-3xl font-extrabold text-white">MY BIRTHDAY WEBSITES</h2>
+            <h2 className="text-3xl font-black cinematic-glow-text tracking-tight">MY CELEBRATION WEBSITES</h2>
             <p className="text-purple-300/80 text-sm mt-1">
-              Manage, edit, and share all your custom birthday celebrations
+              Manage, edit, and share all your personalized birthday surprises
             </p>
           </div>
 
-          <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-2xl text-sm text-purple-300">
-            Total Websites: <span className="font-bold text-pink-400">{birthdays.length}</span>
+          <div className="cinematic-glass-card px-4 py-2 rounded-2xl text-xs font-semibold text-purple-200 flex items-center gap-2">
+            <span>Total Websites:</span>
+            <span className="font-extrabold text-pink-400 text-sm">{birthdays.length}</span>
           </div>
         </div>
 
@@ -185,10 +199,10 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-16 px-6 bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl"
+            className="text-center py-16 px-6 cinematic-glass-card rounded-3xl"
           >
-            <div className="w-16 h-16 bg-pink-500/10 border border-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-8 h-8 text-pink-400" />
+            <div className="w-16 h-16 bg-pink-500/10 border border-pink-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-8 h-8 text-pink-400 animate-pulse" />
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">No Birthday Websites Yet</h3>
             <p className="text-purple-300/70 max-w-md mx-auto mb-6 text-sm">
@@ -196,7 +210,7 @@ export default function DashboardPage() {
             </p>
             <Link
               href="/create"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-full font-medium shadow-lg hover:scale-105 transition-all text-sm"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition-all text-sm"
             >
               <Plus className="w-4 h-4" />
               <span>Create First Birthday Website</span>
@@ -204,28 +218,33 @@ export default function DashboardPage() {
           </motion.div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {birthdays.map((b) => {
-              const bDate = b.birthdayDate ? new Date(b.birthdayDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "July 16";
+            {birthdays.map((b, idx) => {
+              const bDate = b.birthdayDate ? new Date(b.birthdayDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "Special Day";
 
               return (
                 <motion.div
                   key={b._id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="bg-white/5 hover:bg-white/[0.08] border border-white/10 backdrop-blur-xl rounded-3xl p-6 transition-all flex flex-col justify-between shadow-xl group"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="cinematic-glass-card rounded-3xl p-6 flex flex-col justify-between group relative overflow-hidden"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-tr from-pink-500/20 to-purple-500/20 border border-pink-500/30 rounded-2xl flex items-center justify-center text-2xl">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-500/20 to-purple-500/20 border border-pink-500/30 flex items-center justify-center text-2xl shadow-inner">
                           🎂
                         </div>
                         <div>
-                          <h3 className="text-xl font-bold text-white group-hover:text-pink-300 transition-colors">
-                            {b.name}
-                          </h3>
-                          <div className="flex items-center gap-1.5 text-xs text-purple-300/70 mt-0.5">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-xl font-bold text-white group-hover:text-pink-300 transition-colors">
+                              {b.name}
+                            </h3>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30">
+                              Birthday 🎂
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-xs text-purple-300/70 mt-1">
                             <Calendar className="w-3.5 h-3.5 text-pink-400" />
                             <span>{bDate}</span>
                           </div>
@@ -233,7 +252,7 @@ export default function DashboardPage() {
                       </div>
                     </div>
 
-                    <div className="bg-black/30 rounded-2xl p-3 mb-6 border border-white/5 font-mono text-xs text-purple-300 flex items-center justify-between">
+                    <div className="bg-black/40 rounded-2xl p-3 mb-6 border border-white/5 font-mono text-xs text-purple-300 flex items-center justify-between">
                       <span className="truncate">/b/{b.slug}</span>
                       <ExternalLink className="w-3.5 h-3.5 text-purple-400/60 shrink-0 ml-2" />
                     </div>
@@ -244,7 +263,7 @@ export default function DashboardPage() {
                     <Link
                       href={`/b/${b.slug}`}
                       target="_blank"
-                      className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-pink-500/20 hover:text-pink-300 text-purple-200 transition-all text-xs font-medium gap-1"
+                      className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-pink-500/20 hover:text-pink-300 text-purple-200 transition-all text-xs font-medium gap-1 hover:scale-105"
                       title="View Website"
                     >
                       <Eye className="w-4 h-4" />
@@ -253,7 +272,7 @@ export default function DashboardPage() {
 
                     <Link
                       href={`/dashboard/birthday/${b._id}/edit`}
-                      className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-purple-500/20 hover:text-purple-300 text-purple-200 transition-all text-xs font-medium gap-1"
+                      className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-purple-500/20 hover:text-purple-300 text-purple-200 transition-all text-xs font-medium gap-1 hover:scale-105"
                       title="Edit Birthday"
                     >
                       <Edit className="w-4 h-4" />
@@ -262,7 +281,7 @@ export default function DashboardPage() {
 
                     <button
                       onClick={() => handleShare(b)}
-                      className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-blue-500/20 hover:text-blue-300 text-purple-200 transition-all text-xs font-medium gap-1"
+                      className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-blue-500/20 hover:text-blue-300 text-purple-200 transition-all text-xs font-medium gap-1 hover:scale-105"
                       title="Share Link"
                     >
                       <Share2 className="w-4 h-4" />
@@ -271,7 +290,7 @@ export default function DashboardPage() {
 
                     <button
                       onClick={() => setDeleteBirthday(b)}
-                      className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-purple-200 transition-all text-xs font-medium gap-1"
+                      className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-purple-200 transition-all text-xs font-medium gap-1 hover:scale-105"
                       title="Delete Birthday"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -283,12 +302,12 @@ export default function DashboardPage() {
             })}
           </div>
         )}
-      </div>
+      </main>
 
       {/* SHARE MODAL */}
       <AnimatePresence>
         {shareBirthday && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -299,13 +318,13 @@ export default function DashboardPage() {
                 <div className="w-14 h-14 bg-gradient-to-tr from-pink-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-3 text-3xl shadow-lg">
                   🎉
                 </div>
-                <h3 className="text-2xl font-bold text-white">Your Birthday Website is Ready!</h3>
-                <p className="text-purple-300/80 text-sm mt-1">
+                <h3 className="text-2xl font-extrabold text-white">Your Birthday Website is Ready!</h3>
+                <p className="text-purple-300/80 text-xs sm:text-sm mt-1">
                   Share this link with {shareBirthday.name} or family members!
                 </p>
               </div>
 
-              <div className="bg-black/50 border border-white/10 rounded-2xl p-3 flex items-center justify-between gap-2 mb-6">
+              <div className="bg-black/60 border border-white/10 rounded-2xl p-3 flex items-center justify-between gap-2 mb-6">
                 <input
                   type="text"
                   readOnly
@@ -314,7 +333,7 @@ export default function DashboardPage() {
                 />
                 <button
                   onClick={() => copyToClipboard(shareBirthday.fullUrl)}
-                  className="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 shrink-0 transition-all"
+                  className="bg-pink-500 hover:bg-pink-600 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1 shrink-0 transition-all"
                 >
                   {copied ? (
                     <>
@@ -333,7 +352,7 @@ export default function DashboardPage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => copyToClipboard(shareBirthday.fullUrl)}
-                  className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-3 rounded-2xl text-sm font-semibold transition-all shadow-lg"
+                  className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-3 rounded-2xl text-sm font-bold transition-all shadow-lg"
                 >
                   Copy Link
                 </button>
@@ -352,7 +371,7 @@ export default function DashboardPage() {
       {/* DELETE CONFIRMATION MODAL */}
       <AnimatePresence>
         {deleteBirthday && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -363,7 +382,7 @@ export default function DashboardPage() {
                 <AlertTriangle className="w-8 h-8" />
               </div>
 
-              <h3 className="text-2xl font-bold text-white mb-2">Delete Birthday Website?</h3>
+              <h3 className="text-2xl font-extrabold text-white mb-2">Delete Birthday Website?</h3>
               <p className="text-purple-200/80 text-sm mb-6 leading-relaxed">
                 Are you sure you want to delete <span className="text-pink-400 font-semibold">{deleteBirthday.name}'s</span> birthday website? This action cannot be undone.
               </p>
@@ -378,7 +397,7 @@ export default function DashboardPage() {
                 <button
                   onClick={handleDeleteConfirm}
                   disabled={isDeleting}
-                  className="flex-1 bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white py-3 rounded-2xl text-sm font-semibold transition-all shadow-lg disabled:opacity-50"
+                  className="flex-1 bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white py-3 rounded-2xl text-sm font-bold transition-all shadow-lg disabled:opacity-50"
                 >
                   {isDeleting ? "Deleting..." : "Delete Permanently"}
                 </button>
@@ -387,6 +406,9 @@ export default function DashboardPage() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Cinematic Motion Footer */}
+      <CinematicFooter />
     </div>
   );
 }

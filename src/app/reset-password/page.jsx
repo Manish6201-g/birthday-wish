@@ -72,7 +72,7 @@ function ResetPasswordForm() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-md w-full bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-2xl relative z-10"
+      className="max-w-md w-full cinematic-glass-card p-8 rounded-3xl relative z-10"
     >
       <div className="text-center mb-8">
         <Link href="/" className="inline-flex items-center gap-2 mb-4">
@@ -80,7 +80,7 @@ function ResetPasswordForm() {
             <Cake className="w-6 h-6 text-white" />
           </div>
         </Link>
-        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400">
+        <h1 className="text-3xl font-black cinematic-glow-text">
           Reset Password
         </h1>
         <p className="text-purple-200/70 text-sm mt-1">

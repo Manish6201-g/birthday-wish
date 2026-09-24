@@ -289,7 +289,7 @@ export default function CreateBirthdayPage() {
           <div className="w-14 h-14 bg-gradient-to-tr from-pink-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
             <Cake className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400">
+          <h1 className="text-3xl sm:text-4xl font-black cinematic-glow-text">
             Create Birthday Website
           </h1>
           <p className="text-purple-300/80 text-sm mt-1">
@@ -305,7 +305,7 @@ export default function CreateBirthdayPage() {
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* SECTION 1: BASIC INFORMATION */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
+          <div className="cinematic-glass-card p-6 sm:p-8 rounded-3xl space-y-6">
             <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
               <Sparkles className="w-5 h-5" />
               <span>Basic Information</span>
@@ -379,7 +379,7 @@ export default function CreateBirthdayPage() {
           </div>
 
           {/* SECTION 2: WELCOME SECTION */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
+          <div className="cinematic-glass-card p-6 sm:p-8 rounded-3xl space-y-6">
             <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
               <Cake className="w-5 h-5" />
               <span>Welcome & Celebration Screen</span>
@@ -428,7 +428,7 @@ export default function CreateBirthdayPage() {
           </div>
 
           {/* SECTION 3: MEMORIES & PHOTOS */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
+          <div className="cinematic-glass-card p-6 sm:p-8 rounded-3xl space-y-6">
             <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
               <Camera className="w-5 h-5" />
               <span>Memories & Photo Gallery</span>
@@ -501,7 +501,7 @@ export default function CreateBirthdayPage() {
           </div>
 
           {/* SECTION 4: SPECIAL LETTER */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
+          <div className="cinematic-glass-card p-6 sm:p-8 rounded-3xl space-y-6">
             <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
               <FileText className="w-5 h-5" />
               <span>Special Heartfelt Letter</span>
@@ -581,7 +581,7 @@ export default function CreateBirthdayPage() {
           </div>
 
           {/* SECTION 5: MUSIC & THEME & EFFECTS */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
+          <div className="cinematic-glass-card p-6 sm:p-8 rounded-3xl space-y-6">
             <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
               <Palette className="w-5 h-5" />
               <span>Theme, Music & Effects</span>
