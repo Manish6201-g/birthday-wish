@@ -10,6 +10,7 @@ import HappyBirthday from "./HappyBirthday";
 import PhotoGallery from "./PhotoGallery";
 import Letter from "./Letter";
 import MusicPlayer from "./MusicPlayer";
+import BirthdayHubSection from "./BirthdayHubSection";
 import { CinematicFooter } from "@/components/ui/motion-footer";
 
 export default function BirthdayView({ birthday }) {
@@ -101,6 +102,11 @@ export default function BirthdayView({ birthday }) {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Birthday Hub Section on Final Letter Screen */}
+      {!isLoading && currentScreen === 3 && (
+        <BirthdayHubSection currentBirthdaySlug={birthday?.slug} currentName={personName} />
+      )}
 
       {/* Attach Cinematic Motion Footer on Final Screen */}
       {!isLoading && currentScreen === 3 && (

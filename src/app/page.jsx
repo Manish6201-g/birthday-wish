@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Cake, Sparkles, Plus, Eye, ShieldCheck, Heart, Zap, Image as ImageIcon } from "lucide-react";
 import { CinematicFooter } from "@/components/ui/motion-footer";
+import BirthdayHubSection from "@/app/components/BirthdayHubSection";
 
 export default function LandingPage() {
   return (
@@ -134,6 +135,9 @@ export default function LandingPage() {
             </p>
           </motion.div>
         </div>
+
+        {/* Birthday Website Search & Creation Hub */}
+        <BirthdayHubSection />
 
         <div className="text-center text-xs text-purple-300/60 uppercase tracking-widest pt-8">
           Scroll Down to Reveal Cinematic Footer
