@@ -14,7 +14,7 @@ export default function NotFoundView() {
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-md w-full bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-2xl relative z-10"
+        className="max-w-md w-full cinematic-glass-card p-8 rounded-3xl relative z-10"
       >
         <motion.div
           animate={{ rotate: [0, 10, -10, 0] }}
@@ -24,7 +24,7 @@ export default function NotFoundView() {
           <Cake className="w-10 h-10 text-white" />
         </motion.div>
 
-        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400 mb-3">
+        <h1 className="text-3xl font-black cinematic-glow-text mb-3">
           Birthday Page Not Found
         </h1>
 

@@ -64,7 +64,7 @@ export default function LandingPage() {
               <span>Reusable Personalized Birthday Website Builder</span>
             </div>
 
-            <h1 className="text-4xl sm:text-6xl font-black leading-tight text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400 mb-6 drop-shadow-lg">
+            <h1 className="text-4xl sm:text-6xl font-black leading-tight cinematic-glow-text mb-6 drop-shadow-lg">
               Create Magical Birthday Surprises for Anyone
             </h1>
 
@@ -97,7 +97,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           <motion.div
             whileHover={{ y: -5 }}
-            className="bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl"
+            className="cinematic-glass-card p-8 rounded-3xl"
           >
             <div className="w-12 h-12 bg-pink-500/10 border border-pink-500/30 rounded-2xl flex items-center justify-center text-pink-400 mb-5">
               <Zap className="w-6 h-6" />
@@ -110,7 +110,7 @@ export default function LandingPage() {
 
           <motion.div
             whileHover={{ y: -5 }}
-            className="bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl"
+            className="cinematic-glass-card p-8 rounded-3xl"
           >
             <div className="w-12 h-12 bg-purple-500/10 border border-purple-500/30 rounded-2xl flex items-center justify-center text-purple-400 mb-5">
               <ImageIcon className="w-6 h-6" />
@@ -123,7 +123,7 @@ export default function LandingPage() {
 
           <motion.div
             whileHover={{ y: -5 }}
-            className="bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl"
+            className="cinematic-glass-card p-8 rounded-3xl"
           >
             <div className="w-12 h-12 bg-indigo-500/10 border border-indigo-500/30 rounded-2xl flex items-center justify-center text-indigo-400 mb-5">
               <Heart className="w-6 h-6" />
