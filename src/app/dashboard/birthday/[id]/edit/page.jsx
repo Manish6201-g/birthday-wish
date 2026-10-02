@@ -408,6 +408,60 @@ export default function EditBirthdayPage({ params }) {
               <span>Memories & Photo Gallery</span>
             </h2>
 
+            {/* Gallery Type Mode Selection (Solo vs Together) */}
+            <div>
+              <label className="block text-sm font-medium text-purple-200 mb-2">
+                Photo Gallery Type / Mode *
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData({
+                      ...formData,
+                      galleryType: "solo",
+                      galleryTitle: `Shining Moments of ${formData.name || "the Birthday Star"}`,
+                      gallerySubtitle: `Capturing timeless joy, grace & bright smiles ✨`,
+                    })
+                  }
+                  className={`p-3.5 rounded-2xl border text-xs font-semibold flex items-center gap-3 transition-all ${
+                    (formData.galleryType || "solo") === "solo"
+                      ? "bg-pink-500/20 border-pink-500 text-white shadow-lg"
+                      : "bg-white/5 border-white/10 text-purple-300 hover:bg-white/10"
+                  }`}
+                >
+                  <span className="text-xl">👤</span>
+                  <div className="text-left">
+                    <div className="font-bold text-sm text-white">Solo Person Photos (Single)</div>
+                    <div className="text-[10px] text-purple-300/70">Removes "with you" text — shows solo quotes & photos</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData({
+                      ...formData,
+                      galleryType: "together",
+                      galleryTitle: `Moments with ${formData.name || "You"}`,
+                      gallerySubtitle: `Beautiful memories shared together with ${formData.name || "you"} 💕`,
+                    })
+                  }
+                  className={`p-3.5 rounded-2xl border text-xs font-semibold flex items-center gap-3 transition-all ${
+                    formData.galleryType === "together"
+                      ? "bg-pink-500/20 border-pink-500 text-white shadow-lg"
+                      : "bg-white/5 border-white/10 text-purple-300 hover:bg-white/10"
+                  }`}
+                >
+                  <span className="text-xl">👥</span>
+                  <div className="text-left">
+                    <div className="font-bold text-sm text-white">Shared Moments Together</div>
+                    <div className="text-[10px] text-purple-300/70">Shows "Moments with {formData.name || "You"}" and joint memories</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-purple-200 mb-2">
@@ -417,7 +471,7 @@ export default function EditBirthdayPage({ params }) {
                   type="text"
                   value={formData.galleryTitle || ""}
                   onChange={(e) => setFormData({ ...formData, galleryTitle: e.target.value })}
-                  placeholder="Celebration Gallery / Photos of Rahul"
+                  placeholder="Shining Moments of Rahul"
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
                 />
               </div>
@@ -430,7 +484,7 @@ export default function EditBirthdayPage({ params }) {
                   type="text"
                   value={formData.gallerySubtitle || ""}
                   onChange={(e) => setFormData({ ...formData, gallerySubtitle: e.target.value })}
-                  placeholder="Capturing beautiful moments & bright smiles 📸"
+                  placeholder="Capturing timeless joy, grace & bright smiles ✨"
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
                 />
               </div>

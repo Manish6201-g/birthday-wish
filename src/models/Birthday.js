@@ -56,6 +56,11 @@ const BirthdaySchema = new mongoose.Schema(
       type: String,
       default: "Capturing beautiful moments & bright smiles 📸",
     },
+    galleryType: {
+      type: String,
+      enum: ["solo", "together"],
+      default: "solo",
+    },
     letter: {
       greeting: { type: String, default: "My Dearest Friend," },
       content: { type: String, default: "" },

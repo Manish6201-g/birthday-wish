@@ -101,6 +101,20 @@ export default function PhotoGallery({ birthday, onNext }) {
     return rawSrc;
   };
 
+  const isTogetherMode = birthday?.galleryType === "together";
+  const personName = birthday?.name || "the Birthday Star";
+
+  const defaultTitle = isTogetherMode
+    ? `Moments with ${personName}`
+    : `Shining Moments of ${personName}`;
+
+  const defaultSubtitle = isTogetherMode
+    ? `Beautiful memories shared together with ${personName} 💕`
+    : `Capturing timeless joy, grace & bright smiles ✨`;
+
+  const galleryHeading = birthday?.galleryTitle || defaultTitle;
+  const gallerySubheading = birthday?.gallerySubtitle || defaultSubtitle;
+
   return (
     <motion.div
       className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden"
@@ -133,10 +147,10 @@ export default function PhotoGallery({ birthday, onNext }) {
             filter: `drop-shadow(0 0 25px ${primaryColor}66)`,
           }}
         >
-          {birthday?.galleryTitle || "Celebration Gallery"}
+          {galleryHeading}
         </h1>
         <p className="text-purple-200 text-sm sm:text-lg">
-          {birthday?.gallerySubtitle || `Capturing beautiful moments & bright smiles 📸`}
+          {gallerySubheading}
         </p>
       </motion.div>
 
