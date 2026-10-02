@@ -17,31 +17,33 @@ export default function PhotoGallery({ birthday, onNext }) {
     backgroundImage: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
   };
 
+  const name = birthday?.name || "the Birthday Star";
+
   const boyPhotos = [
     {
       id: "boy-1",
       url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",
-      caption: `The King of the Day! 👑 Keep shining bright & chasing your big dreams, ${birthday?.name || "Champ"}!`,
+      caption: `👑 The Main Character of the Day — Keep shining bright and chasing your biggest dreams, ${name}!`,
     },
     {
       id: "boy-2",
       url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800",
-      caption: "Capturing moments of pure joy, courage, strength, and endless laughter 🌟",
+      caption: "🌟 A gentleman with a heart of gold, unstoppable ambition, and endless positivity.",
     },
     {
       id: "boy-3",
       url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800",
-      caption: "A true legend celebrating another awesome year of greatness and success 🎉",
+      caption: "🎉 Here's to another extraordinary chapter of strength, success, and greatness!",
     },
     {
       id: "boy-4",
       url: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800",
-      caption: "Spreading good vibes, positive energy, and happiness everywhere you go 🎈",
+      caption: "🎈 Spreading good vibes, genuine kindness, and laughter everywhere you go.",
     },
     {
       id: "boy-5",
       url: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800",
-      caption: `May your year ahead be as extraordinary and awesome as you are! 🎂✨`,
+      caption: `🎂 May your year ahead be filled with big wins, grand adventures, and pure happiness! ✨`,
     },
   ];
 
@@ -49,36 +51,36 @@ export default function PhotoGallery({ birthday, onNext }) {
     {
       id: "girl-1",
       url: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800",
-      caption: `The Queen of the Day! 👑 Radiating beauty, elegance, and pure happiness, ${birthday?.name || "Queen"}!`,
+      caption: `👑 The Queen of the Celebration — Radiating beauty, elegance, and pure magic, ${name}!`,
     },
     {
       id: "girl-2",
       url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=800",
-      caption: "A heart full of gold and a magical smile that lights up the whole world ✨",
+      caption: "✨ A golden soul with a contagious smile that lights up the whole world.",
     },
     {
       id: "girl-3",
       url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=800",
-      caption: "Celebrating a wonderful soul that brings warmth, love, and sunshine to everyone 💖",
+      caption: "💖 Celebrating a truly remarkable person who brings warmth and sunshine to everyone.",
     },
     {
       id: "girl-4",
       url: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=800",
-      caption: "Creating beautiful memories and spreading sweetness and positivity every day 🎉",
+      caption: "🌸 Creating timeless memories and inspiring everyone with your grace and sweetness.",
     },
     {
       id: "girl-5",
       url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",
-      caption: "Wishing you a lifetime filled with endless love, laughter, and sparkles 🎂🌸",
+      caption: "🎂 Wishing you a year ahead overflowing with love, laughter, and endless sparkles! 🌸",
     },
   ];
 
   const generalPhotos = [
-    { id: 1, url: "/images/1.jpeg", caption: `Beautiful moments & timeless smiles with ${birthday?.name || "you"} ✨` },
-    { id: 2, url: "/images/2.jpeg", caption: "A celebration of a truly wonderful and special soul 🌟" },
-    { id: 3, url: "/images/3.jpeg", caption: "Unforgettable memories & endless laughter together 🎉" },
-    { id: 4, url: "/images/4.jpeg", caption: "Here's to another amazing year of love, success, and joy 🎂" },
-    { id: 5, url: "/images/5.jpeg", caption: "May all your dreams and wishes come true today and always 💕" },
+    { id: 1, url: "/images/1.jpeg", caption: `✨ Celebrating the one-of-a-kind light and beauty you bring to this world, ${name}!` },
+    { id: 2, url: "/images/2.jpeg", caption: "🌟 Capturing timeless joy, authentic moments, and a heart that inspires." },
+    { id: 3, url: "/images/3.jpeg", caption: "🎉 Another year wiser, bolder, and more wonderful — cheers to your special day!" },
+    { id: 4, url: "/images/4.jpeg", caption: "🎈 May your journey ahead be blessed with happiness, peace, and endless reasons to smile." },
+    { id: 5, url: "/images/5.jpeg", caption: "🎂 Wishing you a birthday as magnificent and extraordinary as your spirit! 💕" },
   ];
 
   const selectedPreset =
