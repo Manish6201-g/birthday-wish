@@ -190,7 +190,8 @@ export default function PhotoGallery({ birthday, onNext }) {
             const defaultCaption = selectedPreset[index % selectedPreset.length]?.caption || "";
             const rawCaption = typeof photo === "string" ? "" : (photo.caption || "");
             const hasCustomCaption = rawCaption.trim() !== "";
-            const isGenericMemoryWith = rawCaption.startsWith("Memory with ") && birthday?.galleryType === "solo";
+            const isSoloMode = (birthday?.galleryType || "solo") === "solo";
+            const isGenericMemoryWith = isSoloMode && /^memor(y|ies)\s+with/i.test(rawCaption.trim());
             const displayCaption = (hasCustomCaption && !isGenericMemoryWith) ? rawCaption : defaultCaption;
 
             return (
