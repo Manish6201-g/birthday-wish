@@ -135,7 +135,7 @@ export default function LandingPage() {
 
         {/* Footer Watermark */}
         <footer className="text-center pt-8 border-t border-white/10 text-xs text-purple-300/50">
-          Birthday Platform — Made by Manish
+          Birthday Platform — Made With 🫶
         </footer>
       </div>
     </div>
