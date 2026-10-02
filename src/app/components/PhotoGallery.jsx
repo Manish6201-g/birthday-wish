@@ -187,6 +187,12 @@ export default function PhotoGallery({ birthday, onNext }) {
         >
           {photosList.map((photo, index) => {
             const imgSrc = getOptimizedSrc(photo);
+            const defaultCaption = selectedPreset[index % selectedPreset.length]?.caption || "";
+            const rawCaption = typeof photo === "string" ? "" : (photo.caption || "");
+            const hasCustomCaption = rawCaption.trim() !== "";
+            const isGenericMemoryWith = rawCaption.startsWith("Memory with ") && birthday?.galleryType === "solo";
+            const displayCaption = (hasCustomCaption && !isGenericMemoryWith) ? rawCaption : defaultCaption;
+
             return (
               <SwiperSlide
                 key={photo._id || photo.id || index}
@@ -203,14 +209,14 @@ export default function PhotoGallery({ birthday, onNext }) {
                 <div className="relative w-full h-full flex items-center justify-center p-3 z-10">
                   <img
                     src={imgSrc}
-                    alt={photo.caption || `Memory ${index + 1}`}
+                    alt={displayCaption || `Memory ${index + 1}`}
                     className="max-w-full max-h-full object-contain rounded-xl shadow-2xl transition-transform duration-300 hover:scale-[1.02]"
                   />
                 </div>
 
-                {photo.caption && (
+                {displayCaption && (
                   <div className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-4 text-center text-white text-xs sm:text-sm font-medium">
-                    {photo.caption}
+                    {displayCaption}
                   </div>
                 )}
               </SwiperSlide>

@@ -29,6 +29,86 @@ const THEME_PRESETS = [
   { name: "Sunset", primary: "#f97316", secondary: "#ec4899", bg: "#0f050d" },
 ];
 
+const generatePresetContent = (gender = "boy", galleryType = "solo", name = "") => {
+  const pName = name.trim() || (gender === "boy" ? "Champ" : gender === "girl" ? "Queen" : "Friend");
+
+  let title = "Time to Celebrate!";
+  let subtitle = "The countdown is over... Let's celebrate! 🎉";
+  let welcomeMessage = "🎉 It's your special day! 🎉";
+
+  if (gender === "boy") {
+    title = `Happy Birthday ${pName}! 👦⚡`;
+    subtitle = `The countdown is over... Celebrating the King of the Day! 🎂✨`;
+    welcomeMessage = `🎉 It's ${pName}'s Special Day! 🎉`;
+  } else if (gender === "girl") {
+    title = `Happy Birthday ${pName}! 👧👑`;
+    subtitle = `The countdown is over... Celebrating the Queen of the Day! 🌸✨`;
+    welcomeMessage = `🎉 It's ${pName}'s Special Day! 🎉`;
+  } else {
+    title = `Happy Birthday ${pName}! 🎉✨`;
+    subtitle = `The countdown is over... Let's celebrate this wonderful day! 🎂✨`;
+    welcomeMessage = `🎉 It's your special day! 🎉`;
+  }
+
+  let galleryTitle = "";
+  let gallerySubtitle = "";
+
+  if (galleryType === "together") {
+    galleryTitle = `Moments with ${pName}`;
+    gallerySubtitle = `Beautiful memories shared together with ${pName} 💕`;
+  } else {
+    if (gender === "boy") {
+      galleryTitle = `Shining Moments of ${pName} 👦`;
+      gallerySubtitle = `Capturing strength, ambition & unstoppable vibes ✨`;
+    } else if (gender === "girl") {
+      galleryTitle = `Shining Moments of ${pName} 👧`;
+      gallerySubtitle = `Capturing elegance, beauty & pure magic ✨`;
+    } else {
+      galleryTitle = `Shining Moments of ${pName} 📸`;
+      gallerySubtitle = `Capturing timeless joy, grace & bright smiles ✨`;
+    }
+  }
+
+  let letter = {
+    greeting: "",
+    content: "",
+    closing: "",
+    signature: "",
+  };
+
+  if (gender === "boy") {
+    letter = {
+      greeting: `Dearest ${pName},`,
+      content: `On this very special day, I want you to know how incredibly proud and grateful I am to have you in my life. You bring so much strength, positive energy, and laughter wherever you go.\n\nMay this brand new year open doors to unstoppable success, grand adventures, and lifelong happiness. Keep dreaming big, chasing your goals, and shining bright like the legend you are!\n\nHappy Birthday, King! 🎂✨`,
+      closing: "With heartfelt wishes,",
+      signature: "Your Best Buddy 💕",
+    };
+  } else if (gender === "girl") {
+    letter = {
+      greeting: `Dearest ${pName},`,
+      content: `On your special day, I want to celebrate the remarkable, graceful, and beautiful soul that you are. Your smile brightens up even the darkest days, and your warmth touches everyone around you.\n\nMay your birthday and the year ahead be filled with endless magic, laughter, sweet surprises, and all the happiness your heart can hold.\n\nHappy Birthday, Queen! 🎂✨`,
+      closing: "With all my love,",
+      signature: "Your Dearest Friend 💕",
+    };
+  } else {
+    letter = {
+      greeting: `Dearest ${pName},`,
+      content: `On this very special day, I want you to know how incredibly grateful I am to have you in my life. Your birthday isn't just a celebration of another year - it's a celebration of all the joy, laughter, and beautiful memories you bring to this world.\n\nYou have this amazing ability to light up any room you enter, to make people smile, and to spread kindness wherever you go.\n\nHappy Birthday, beautiful soul! 🎂✨`,
+      closing: "Warmest birthday wishes,",
+      signature: "Your Friend 💕",
+    };
+  }
+
+  return {
+    title,
+    subtitle,
+    welcomeMessage,
+    galleryTitle,
+    gallerySubtitle,
+    letter,
+  };
+};
+
 export default function EditBirthdayPage({ params }) {
   const router = useRouter();
   const { id } = use(params);
@@ -44,6 +124,36 @@ export default function EditBirthdayPage({ params }) {
   useEffect(() => {
     fetchBirthdayDetails();
   }, [id]);
+
+  const handleGenderSelect = (newGender) => {
+    if (!formData) return;
+    const generated = generatePresetContent(newGender, formData.galleryType || "solo", formData.name || "");
+    setFormData((prev) => ({
+      ...prev,
+      gender: newGender,
+      ...generated,
+    }));
+  };
+
+  const handleGalleryTypeSelect = (newGalleryType) => {
+    if (!formData) return;
+    const generated = generatePresetContent(formData.gender || "boy", newGalleryType, formData.name || "");
+    setFormData((prev) => ({
+      ...prev,
+      galleryType: newGalleryType,
+      galleryTitle: generated.galleryTitle,
+      gallerySubtitle: generated.gallerySubtitle,
+    }));
+  };
+
+  const handleAutoGenerate = () => {
+    if (!formData) return;
+    const generated = generatePresetContent(formData.gender || "boy", formData.galleryType || "solo", formData.name || "");
+    setFormData((prev) => ({
+      ...prev,
+      ...generated,
+    }));
+  };
 
   const fetchBirthdayDetails = async () => {
     try {
@@ -94,7 +204,7 @@ export default function EditBirthdayPage({ params }) {
 
         uploadedPhotos.push({
           url: result.url,
-          caption: `Memory with ${formData.name || "you"}`,
+          caption: formData?.galleryType === "together" ? `Memory with ${formData?.name || "you"}` : "",
           order: (formData.photos || []).length + uploadedPhotos.length,
         });
       }
@@ -259,10 +369,21 @@ export default function EditBirthdayPage({ params }) {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* SECTION 1: BASIC INFORMATION */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
-            <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
-              <Sparkles className="w-5 h-5" />
-              <span>Basic Information</span>
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
+                <Sparkles className="w-5 h-5" />
+                <span>Basic Information</span>
+              </h2>
+
+              <button
+                type="button"
+                onClick={handleAutoGenerate}
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md transition-all hover:scale-105 border border-white/20"
+              >
+                <Sparkles className="w-4 h-4 text-yellow-300" />
+                <span>Auto-Generate Quotes & Letter 🪄</span>
+              </button>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
@@ -339,7 +460,7 @@ export default function EditBirthdayPage({ params }) {
                     <button
                       key={g.id}
                       type="button"
-                      onClick={() => setFormData({ ...formData, gender: g.id })}
+                      onClick={() => handleGenderSelect(g.id)}
                       className={`p-3.5 rounded-2xl border text-xs font-semibold flex flex-col items-center gap-1 transition-all ${
                         (formData.gender || "boy") === g.id
                           ? "bg-pink-500/20 border-pink-500 text-white shadow-lg"
@@ -416,14 +537,7 @@ export default function EditBirthdayPage({ params }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() =>
-                    setFormData({
-                      ...formData,
-                      galleryType: "solo",
-                      galleryTitle: `Shining Moments of ${formData.name || "the Birthday Star"}`,
-                      gallerySubtitle: `Capturing timeless joy, grace & bright smiles ✨`,
-                    })
-                  }
+                  onClick={() => handleGalleryTypeSelect("solo")}
                   className={`p-3.5 rounded-2xl border text-xs font-semibold flex items-center gap-3 transition-all ${
                     (formData.galleryType || "solo") === "solo"
                       ? "bg-pink-500/20 border-pink-500 text-white shadow-lg"
@@ -439,14 +553,7 @@ export default function EditBirthdayPage({ params }) {
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setFormData({
-                      ...formData,
-                      galleryType: "together",
-                      galleryTitle: `Moments with ${formData.name || "You"}`,
-                      gallerySubtitle: `Beautiful memories shared together with ${formData.name || "you"} 💕`,
-                    })
-                  }
+                  onClick={() => handleGalleryTypeSelect("together")}
                   className={`p-3.5 rounded-2xl border text-xs font-semibold flex items-center gap-3 transition-all ${
                     formData.galleryType === "together"
                       ? "bg-pink-500/20 border-pink-500 text-white shadow-lg"
@@ -564,10 +671,21 @@ export default function EditBirthdayPage({ params }) {
 
           {/* SECTION 4: SPECIAL LETTER */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl space-y-6">
-            <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
-              <FileText className="w-5 h-5" />
-              <span>Special Heartfelt Letter</span>
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <h2 className="text-xl font-bold text-pink-400 flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                <span>Special Heartfelt Letter</span>
+              </h2>
+
+              <button
+                type="button"
+                onClick={handleAutoGenerate}
+                className="flex items-center justify-center gap-2 bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 border border-pink-500/40 text-xs font-bold px-3.5 py-2 rounded-xl transition-all hover:scale-105"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-pink-400" />
+                <span>Auto-Generate Letter 🪄</span>
+              </button>
+            </div>
 
             <div className="space-y-4">
               <div>
