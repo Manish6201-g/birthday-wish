@@ -47,6 +47,7 @@ export default function CreateBirthdayPage() {
     galleryTitle: "Celebration Gallery",
     gallerySubtitle: "Capturing beautiful moments & bright smiles 📸",
     galleryType: "solo",
+    floatingElementType: "mixed",
     letter: {
       greeting: "My Dearest Friend,",
       content:
@@ -846,6 +847,38 @@ export default function CreateBirthdayPage() {
                     />
                     <span>{eff.label}</span>
                   </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Floating Element Options Selector */}
+            <div className="pt-4 border-t border-white/10">
+              <label className="block text-sm font-medium text-purple-200 mb-2">
+                Floating Elements Options (Float all over website after celebration) *
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  { id: "balloons", label: "Floating Balloons", icon: "🎈" },
+                  { id: "hearts", label: "Glowing Hearts", icon: "💖" },
+                  { id: "stars", label: "Magic Stars", icon: "✨" },
+                  { id: "flowers", label: "Rose Petals", icon: "🌸" },
+                  { id: "gifts", label: "Presents & Gifts", icon: "🎁" },
+                  { id: "cakes", label: "Cakes & Sweets", icon: "🎂" },
+                  { id: "mixed", label: "Mixed Celebration", icon: "🌟" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, floatingElementType: item.id })}
+                    className={`p-3 rounded-2xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
+                      (formData.floatingElementType || "mixed") === item.id
+                        ? "bg-pink-500/20 border-pink-500 text-white shadow-lg"
+                        : "bg-white/5 border-white/10 text-purple-300 hover:bg-white/10"
+                    }`}
+                  >
+                    <span>{item.icon}</span>
+                    <span className="truncate">{item.label}</span>
+                  </button>
                 ))}
               </div>
             </div>

@@ -10,6 +10,7 @@ import HappyBirthday from "./HappyBirthday";
 import PhotoGallery from "./PhotoGallery";
 import Letter from "./Letter";
 import MusicPlayer from "./MusicPlayer";
+import FloatingElements from "./FloatingElements";
 
 export default function BirthdayView({ birthday }) {
   const [currentScreen, setCurrentScreen] = useState(0);
@@ -96,6 +97,11 @@ export default function BirthdayView({ birthday }) {
           <AnimatePresence mode="wait">{screens[currentScreen]}</AnimatePresence>
         )}
       </AnimatePresence>
+
+      {/* Interactive Screen Floating Particles */}
+      {!isLoading && (
+        <FloatingElements type={birthday?.floatingElementType || "mixed"} />
+      )}
 
       {/* Floating Background Music Player */}
       <MusicPlayer musicConfig={birthday?.music} />

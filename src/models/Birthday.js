@@ -90,6 +90,11 @@ const BirthdaySchema = new mongoose.Schema(
       fireworks: { type: Boolean, default: true },
       particles: { type: Boolean, default: true },
     },
+    floatingElementType: {
+      type: String,
+      enum: ["balloons", "hearts", "stars", "flowers", "gifts", "cakes", "mixed"],
+      default: "mixed",
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
