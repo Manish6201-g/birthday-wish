@@ -134,7 +134,7 @@ export default function BirthdayView({ birthday }) {
         }}
         className="fixed bottom-4 right-4 text-[13px] text-white/40 pointer-events-none z-50 font-light"
       >
-        Made by Manish
+        Made with 🫶
       </motion.div>
     </div>
   );
