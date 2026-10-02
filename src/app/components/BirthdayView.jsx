@@ -67,11 +67,9 @@ export default function BirthdayView({ birthday }) {
   const secondaryColor = birthday?.theme?.secondaryColor || "#a855f7";
   const backgroundColor = birthday?.theme?.backgroundColor || "#090514";
 
-  const personName = birthday?.name || "Special Someone";
-
   return (
     <div
-      className="min-h-screen relative transition-colors duration-700 overflow-x-hidden"
+      className="min-h-screen overflow-hidden relative transition-colors duration-700"
       style={{
         backgroundColor: backgroundColor,
         backgroundImage: `radial-gradient(ellipse at top, ${backgroundColor}, #000000)`,
@@ -91,15 +89,13 @@ export default function BirthdayView({ birthday }) {
         }}
       />
 
-      <div className="relative z-10">
-        <AnimatePresence mode="wait">
-          {isLoading ? (
-            <Loader key="loader" birthday={birthday} />
-          ) : (
-            <AnimatePresence mode="wait">{screens[currentScreen]}</AnimatePresence>
-          )}
-        </AnimatePresence>
-      </div>
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <Loader key="loader" birthday={birthday} />
+        ) : (
+          <AnimatePresence mode="wait">{screens[currentScreen]}</AnimatePresence>
+        )}
+      </AnimatePresence>
 
       {/* Floating Background Music Player */}
       <MusicPlayer musicConfig={birthday?.music} />
