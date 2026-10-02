@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Mail, Heart, Sparkles, RotateCcw } from "lucide-react";
+import { Mail, Heart, Sparkles, RotateCcw, Send, MessageCircle, Check } from "lucide-react";
 import confetti from "canvas-confetti";
 
 export default function Letter({ birthday, onRestart }) {
@@ -10,6 +10,14 @@ export default function Letter({ birthday, onRestart }) {
   const [showText, setShowText] = useState(false);
   const [currentText, setCurrentText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
+
+  // Guest Reply & Reaction State
+  const [senderName, setSenderName] = useState("");
+  const [reaction, setReaction] = useState("❤️");
+  const [replyMessage, setReplyMessage] = useState("");
+  const [isSubmittingReply, setIsSubmittingReply] = useState(false);
+  const [replySubmitted, setReplySubmitted] = useState(false);
+  const [replyError, setReplyError] = useState("");
 
   const primaryColor = birthday?.theme?.primaryColor || "#ec4899";
   const secondaryColor = birthday?.theme?.secondaryColor || "#a855f7";
@@ -24,7 +32,7 @@ export default function Letter({ birthday, onRestart }) {
       birthday?.letter?.content ||
       `On this very special day, I want you to know how incredibly grateful I am to have you in my life. Your birthday isn't just a celebration of another year - it's a celebration of all the joy, laughter, and beautiful memories you bring to this world.\n\nYou have this amazing ability to light up any room you enter, to make people smile even on their darkest days, and to spread kindness wherever you go. Your heart is pure gold, and your spirit is absolutely infectious.\n\nThank you for being the wonderful, amazing, absolutely fantastic person that you are. The world is so much brighter because you're in it.\n\nHappy Birthday, beautiful soul! 🎂✨`;
     const closing = birthday?.letter?.closing || "With all my love and warmest wishes,";
-    const signature = birthday?.letter?.signature || "Your Friend Manish 💕";
+    const signature = birthday?.letter?.signature || "Your Friend 💕";
 
     return `${greeting}\n\n${content}\n\n${closing}\n${signature}`;
   }, [birthday?.letter]);
@@ -68,9 +76,48 @@ export default function Letter({ birthday, onRestart }) {
     setShowCursor(true);
   };
 
+  const handleReplySubmit = async (e) => {
+    e.preventDefault();
+    setReplyError("");
+    setIsSubmittingReply(true);
+
+    try {
+      const slug = birthday?.slug;
+      if (!slug) {
+        throw new Error("Missing birthday link reference.");
+      }
+
+      const res = await fetch(`/api/birthdays/public/${slug}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          senderName,
+          reaction,
+          message: replyMessage,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to send reaction");
+
+      setReplySubmitted(true);
+      if (birthday?.effects?.confetti !== false) {
+        confetti({
+          particleCount: 75,
+          spread: 80,
+          origin: { y: 0.7 },
+        });
+      }
+    } catch (err) {
+      setReplyError(err.message);
+    } finally {
+      setIsSubmittingReply(false);
+    }
+  };
+
   return (
     <motion.div
-      className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden"
+      className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden py-12"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
@@ -229,6 +276,100 @@ export default function Letter({ birthday, onRestart }) {
             )}
           </AnimatePresence>
         </motion.div>
+
+        {/* GUEST REACTION & REPLY SECTION */}
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mt-8 bg-white/10 border border-white/20 backdrop-blur-xl p-5 sm:p-7 rounded-3xl text-left space-y-4 max-w-xl mx-auto shadow-2xl relative z-30"
+          >
+            <div className="flex items-center gap-2 text-pink-300 font-bold text-base sm:text-lg">
+              <MessageCircle className="w-5 h-5 text-pink-400" />
+              <span>Leave a Reaction & Reply Message 💌</span>
+            </div>
+            <p className="text-xs text-purple-200/90 leading-relaxed">
+              Loved the surprise? Leave your reaction or reply note below so the creator can see it in their dashboard!
+            </p>
+
+            {replySubmitted ? (
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-emerald-500/20 border border-emerald-500/40 p-5 rounded-2xl text-center space-y-2"
+              >
+                <div className="text-3xl">💖</div>
+                <div className="text-emerald-300 font-bold text-base">Message & Reaction Sent!</div>
+                <div className="text-xs text-emerald-200/90">
+                  Your reply has been saved successfully. The creator will see it on their dashboard 💕
+                </div>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleReplySubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-purple-200 mb-2">
+                    Select Your Emoji Reaction *
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {["❤️", "🥳", "🥺", "😭", "✨", "🎂", "💖", "🔥"].map((emoji) => (
+                      <button
+                        key={emoji}
+                        type="button"
+                        onClick={() => setReaction(emoji)}
+                        className={`w-10 h-10 rounded-2xl text-xl flex items-center justify-center transition-all border ${
+                          reaction === emoji
+                            ? "bg-pink-500/30 border-pink-400 scale-110 shadow-lg"
+                            : "bg-white/5 border-white/10 hover:bg-white/15"
+                        }`}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-purple-200 mb-1.5">
+                    Your Name (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={senderName}
+                    onChange={(e) => setSenderName(e.target.value)}
+                    placeholder={birthday?.name || "Birthday Person"}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-purple-300/40 focus:outline-none focus:border-pink-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-purple-200 mb-1.5">
+                    Your Message / Reply Note
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={replyMessage}
+                    onChange={(e) => setReplyMessage(e.target.value)}
+                    placeholder="Thank you so much! This surprise made my day... 💕"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-purple-300/40 focus:outline-none focus:border-pink-400 leading-relaxed"
+                  />
+                </div>
+
+                {replyError && <div className="text-xs text-red-300">{replyError}</div>}
+
+                <button
+                  type="submit"
+                  disabled={isSubmittingReply}
+                  style={gradientStyle}
+                  className="w-full py-3 px-4 rounded-xl text-white text-xs font-bold shadow-lg border border-white/20 hover:scale-[101%] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>{isSubmittingReply ? "Sending Response..." : "Send Reaction & Reply 💖"}</span>
+                </button>
+              </form>
+            )}
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );

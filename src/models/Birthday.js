@@ -100,6 +100,14 @@ const BirthdaySchema = new mongoose.Schema(
       ref: "User",
       required: false,
     },
+    replies: [
+      {
+        senderName: { type: String, default: "Birthday Guest" },
+        reaction: { type: String, default: "❤️" },
+        message: { type: String, default: "" },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   {
     timestamps: true,

@@ -18,6 +18,8 @@ import {
   Sparkles,
   ExternalLink,
   AlertTriangle,
+  MessageCircle,
+  X,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -33,6 +35,9 @@ export default function DashboardPage() {
   // Delete modal state
   const [deleteBirthday, setDeleteBirthday] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Replies modal state
+  const [viewRepliesBirthday, setViewRepliesBirthday] = useState(null);
 
   useEffect(() => {
     checkAuthAndLoadData();
@@ -87,6 +92,33 @@ export default function DashboardPage() {
       alert("Error deleting birthday website");
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteReply = async (birthdayId, replyId) => {
+    if (!confirm("Are you sure you want to delete this guest reply?")) return;
+    try {
+      const res = await fetch(`/api/birthdays/${birthdayId}/reply/${replyId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setBirthdays((prev) =>
+          prev.map((b) => {
+            if (b._id === birthdayId) {
+              const updatedReplies = (b.replies || []).filter((r) => (r._id || r.id) !== replyId);
+              return { ...b, replies: updatedReplies };
+            }
+            return b;
+          })
+        );
+        setViewRepliesBirthday((prev) => {
+          if (!prev) return null;
+          const updatedReplies = (prev.replies || []).filter((r) => (r._id || r.id) !== replyId);
+          return { ...prev, replies: updatedReplies };
+        });
+      }
+    } catch (err) {
+      console.error("Error deleting reply:", err);
     }
   };
 
@@ -171,7 +203,7 @@ export default function DashboardPage() {
           <div>
             <h2 className="text-3xl font-extrabold text-white">MY BIRTHDAY WEBSITES</h2>
             <p className="text-purple-300/80 text-sm mt-1">
-              Manage, edit, and share all your custom birthday celebrations
+              Manage, edit, and view guest messages & reactions for all your birthday celebrations
             </p>
           </div>
 
@@ -206,6 +238,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {birthdays.map((b) => {
               const bDate = b.birthdayDate ? new Date(b.birthdayDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "July 16";
+              const replyCount = (b.replies || []).length;
 
               return (
                 <motion.div
@@ -231,6 +264,19 @@ export default function DashboardPage() {
                           </div>
                         </div>
                       </div>
+
+                      {/* Reply counter badge */}
+                      <button
+                        onClick={() => setViewRepliesBirthday(b)}
+                        className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
+                          replyCount > 0
+                            ? "bg-pink-500/20 text-pink-300 border border-pink-500/40 hover:scale-105 shadow-md"
+                            : "bg-white/5 text-purple-300/60 border border-white/10 hover:text-white"
+                        }`}
+                      >
+                        <MessageCircle className="w-3.5 h-3.5 text-pink-400" />
+                        <span>{replyCount} {replyCount === 1 ? "Reply" : "Replies"}</span>
+                      </button>
                     </div>
 
                     <div className="bg-black/30 rounded-2xl p-3 mb-6 border border-white/5 font-mono text-xs text-purple-300 flex items-center justify-between">
@@ -240,15 +286,15 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Actions Bar */}
-                  <div className="grid grid-cols-4 gap-2 pt-4 border-t border-white/10">
+                  <div className="grid grid-cols-5 gap-1.5 pt-4 border-t border-white/10">
                     <Link
                       href={`/b/${b.slug}`}
                       target="_blank"
                       className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-pink-500/20 hover:text-pink-300 text-purple-200 transition-all text-xs font-medium gap-1"
                       title="View Website"
                     >
-                      <Eye className="w-4 h-4" />
-                      <span>View</span>
+                      <Eye className="w-3.5 h-3.5" />
+                      <span className="text-[10px]">View</span>
                     </Link>
 
                     <Link
@@ -256,17 +302,30 @@ export default function DashboardPage() {
                       className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-purple-500/20 hover:text-purple-300 text-purple-200 transition-all text-xs font-medium gap-1"
                       title="Edit Birthday"
                     >
-                      <Edit className="w-4 h-4" />
-                      <span>Edit</span>
+                      <Edit className="w-3.5 h-3.5" />
+                      <span className="text-[10px]">Edit</span>
                     </Link>
+
+                    <button
+                      onClick={() => setViewRepliesBirthday(b)}
+                      className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all text-xs font-medium gap-1 ${
+                        replyCount > 0
+                          ? "bg-pink-500/20 border-pink-500/40 text-pink-300 font-bold"
+                          : "bg-white/5 border-white/10 hover:bg-pink-500/10 text-purple-200"
+                      }`}
+                      title="View Replies & Reactions"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5 text-pink-400" />
+                      <span className="text-[10px]">Replies ({replyCount})</span>
+                    </button>
 
                     <button
                       onClick={() => handleShare(b)}
                       className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-blue-500/20 hover:text-blue-300 text-purple-200 transition-all text-xs font-medium gap-1"
                       title="Share Link"
                     >
-                      <Share2 className="w-4 h-4" />
-                      <span>Share</span>
+                      <Share2 className="w-3.5 h-3.5" />
+                      <span className="text-[10px]">Share</span>
                     </button>
 
                     <button
@@ -274,8 +333,8 @@ export default function DashboardPage() {
                       className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-purple-200 transition-all text-xs font-medium gap-1"
                       title="Delete Birthday"
                     >
-                      <Trash2 className="w-4 h-4" />
-                      <span>Delete</span>
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span className="text-[10px]">Delete</span>
                     </button>
                   </div>
                 </motion.div>
@@ -284,6 +343,89 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* VIEW REPLIES & REACTIONS MODAL */}
+      <AnimatePresence>
+        {viewRepliesBirthday && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-purple-950 border border-pink-500/40 rounded-3xl p-6 max-w-lg w-full shadow-2xl relative max-h-[85vh] flex flex-col"
+            >
+              <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-pink-500/20 border border-pink-500/30 rounded-xl flex items-center justify-center text-xl">
+                    💌
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Guest Messages & Reactions</h3>
+                    <p className="text-xs text-purple-300/70">
+                      For <span className="text-pink-300 font-semibold">{viewRepliesBirthday.name}</span> (/b/{viewRepliesBirthday.slug})
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setViewRepliesBirthday(null)}
+                  className="p-2 text-purple-300 hover:text-white rounded-full bg-white/5 hover:bg-white/10"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="overflow-y-auto space-y-3 flex-1 pr-1">
+                {(viewRepliesBirthday.replies || []).length === 0 ? (
+                  <div className="text-center py-12 text-purple-300/60 text-xs leading-relaxed">
+                    <p className="text-3xl mb-2">📬</p>
+                    <p className="font-semibold text-purple-200 text-sm">No replies received yet</p>
+                    <p className="mt-1">
+                      Share the website link with <span className="text-pink-300 font-semibold">{viewRepliesBirthday.name}</span> so they can leave their reaction after viewing the birthday surprise!
+                    </p>
+                  </div>
+                ) : (
+                  [...(viewRepliesBirthday.replies || [])].reverse().map((r) => (
+                    <div
+                      key={r._id || r.createdAt}
+                      className="bg-white/5 border border-white/10 p-4 rounded-2xl space-y-2 relative group hover:border-pink-500/30 transition-all"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-2xl bg-pink-500/20 border border-pink-500/30 w-10 h-10 rounded-xl flex items-center justify-center shrink-0">
+                            {r.reaction || "❤️"}
+                          </span>
+                          <div>
+                            <div className="text-sm font-bold text-white">
+                              {r.senderName || viewRepliesBirthday.name || "Birthday Guest"}
+                            </div>
+                            <div className="text-[10px] text-purple-300/60 font-mono">
+                              {r.createdAt ? new Date(r.createdAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" }) : "Just now"}
+                            </div>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => handleDeleteReply(viewRepliesBirthday._id, r._id)}
+                          className="p-2 text-gray-400 hover:text-red-400 transition-colors rounded-lg hover:bg-white/5"
+                          title="Delete guest reply"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {r.message && (
+                        <div className="text-xs text-purple-200/90 leading-relaxed bg-black/40 p-3 rounded-xl border border-white/5 whitespace-pre-wrap font-sans">
+                          "{r.message}"
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* SHARE MODAL */}
       <AnimatePresence>
