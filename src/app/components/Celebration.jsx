@@ -82,7 +82,7 @@ export default function Celebration({ birthday, onNext }) {
         </motion.div>
 
         <motion.h1
-          className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text mb-6"
+          className="text-4xl sm:text-6xl md:text-7xl px-4 py-2 font-bold text-transparent bg-clip-text mb-6 inline-block max-w-full leading-tight"
           style={{
             ...gradientStyle,
             filter: `drop-shadow(0 0 30px ${primaryColor}88)`,
@@ -92,7 +92,7 @@ export default function Celebration({ birthday, onNext }) {
         </motion.h1>
 
         <motion.p
-          className="text-xl text-purple-200 mb-8"
+          className="text-lg sm:text-xl text-purple-200 mb-8 px-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}

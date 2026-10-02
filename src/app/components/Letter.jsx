@@ -83,7 +83,7 @@ export default function Letter({ birthday, onRestart }) {
           transition={{ delay: 0.3 }}
         >
           <h1
-            className="text-4xl md:text-6xl py-1 md:py-2 font-bold text-transparent bg-clip-text mb-4"
+            className="text-3xl sm:text-5xl md:text-6xl px-4 py-2 font-bold text-transparent bg-clip-text mb-4 inline-block max-w-full leading-tight"
             style={{
               ...gradientStyle,
               filter: `drop-shadow(0 0 25px ${primaryColor}66)`,
@@ -91,7 +91,7 @@ export default function Letter({ birthday, onRestart }) {
           >
             A Special Letter
           </h1>
-          <p className="text-lg text-purple-200">
+          <p className="text-base sm:text-lg text-purple-200">
             Just for {birthday?.name || "you"}, on your special day 💌
           </p>
         </motion.div>
@@ -146,7 +146,7 @@ export default function Letter({ birthday, onRestart }) {
             ) : (
               <motion.div
                 key="letter"
-                className="w-full max-w-2xl rounded-2xl shadow-2xl border-2 border-pink-300 p-8 relative transition-all"
+                className="w-full max-w-2xl rounded-2xl shadow-2xl border-2 border-pink-300 p-5 sm:p-8 relative transition-all overflow-hidden"
                 initial={{ rotateX: -90, opacity: 0 }}
                 animate={{ rotateX: 0, opacity: 1 }}
                 exit={{ opacity: 0, scale: 0.2 }}
@@ -156,20 +156,20 @@ export default function Letter({ birthday, onRestart }) {
                     "linear-gradient(135deg, #fce7f3 0%, #fae8ff 25%, #e0e7ff 50%, #fdf2f8 75%, #fce7f3 100%)",
                 }}
               >
-                <div className="text-center mb-6">
+                <div className="text-center mb-4 sm:mb-6">
                   <motion.div
                     className="inline-block"
                     animate={{ rotate: [0, 5, -5, 0] }}
                     transition={{ duration: 3, repeat: Infinity }}
                   >
-                    <Heart className="w-12 h-12 text-red-500 fill-current mx-auto mb-3" />
+                    <Heart className="w-10 h-10 sm:w-12 sm:h-12 text-red-500 fill-current mx-auto mb-2 sm:mb-3" />
                   </motion.div>
                 </div>
 
-                <div className="min-h-72 max-h-72 overflow-y-auto text-gray-700 leading-relaxed">
+                <div className="min-h-72 max-h-72 sm:max-h-80 overflow-y-auto text-gray-800 leading-relaxed px-2 sm:px-4 py-1">
                   {showText && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-3 mr-2">
-                      <div className="whitespace-pre-wrap font-cute">
+                      <div className="whitespace-pre-wrap font-cute break-words leading-relaxed text-sm sm:text-base font-medium text-gray-800">
                         {currentText}
                         {showCursor && (
                           <motion.span

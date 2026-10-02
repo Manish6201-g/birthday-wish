@@ -217,7 +217,7 @@ export default function HappyBirthday({ birthday, onNext }) {
         </div>
 
         <motion.h1
-          className="text-5xl md:text-7xl py-1.5 md:py-2 font-bold text-transparent bg-clip-text mb-4 relative z-10"
+          className="text-4xl sm:text-6xl md:text-7xl px-4 py-2 font-bold text-transparent bg-clip-text mb-4 relative z-10 inline-block max-w-full leading-tight"
           style={{
             ...gradientStyle,
             filter: `drop-shadow(0 0 25px ${primaryColor}88)`,
@@ -230,14 +230,14 @@ export default function HappyBirthday({ birthday, onNext }) {
         </motion.h1>
 
         <motion.h2
-          className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text mb-6 relative z-10"
+          className="text-2xl sm:text-3xl md:text-4xl px-4 py-1 font-bold text-transparent bg-clip-text mb-6 relative z-10 inline-block max-w-full leading-tight"
           style={gradientStyle}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.3 }}
         >
           {nickname}
-          <span className="text-white">💕</span>
+          <span className="text-white ml-2 inline-block">💕</span>
         </motion.h2>
 
         <motion.div

@@ -91,7 +91,7 @@ export default function Countdown({ birthday, onComplete }) {
         </motion.div>
 
         <motion.h1
-          className="text-4xl md:text-6xl py-1 md:py-2 font-bold text-transparent bg-clip-text mb-4"
+          className="text-3xl sm:text-5xl md:text-6xl px-4 py-2 font-bold text-transparent bg-clip-text mb-4 inline-block max-w-full leading-tight"
           style={{
             ...gradientStyle,
             filter: `drop-shadow(0 0 25px ${primaryColor}66)`,
@@ -99,7 +99,7 @@ export default function Countdown({ birthday, onComplete }) {
         >
           {birthday?.name ? `${birthday.name}'s Birthday Countdown` : "Birthday Countdown"}
         </motion.h1>
-        <p className="text-lg text-purple-200">
+        <p className="text-base sm:text-lg text-purple-200 px-4">
           {birthday?.subtitle || "The magical moment approaches..."}
         </p>
       </motion.div>

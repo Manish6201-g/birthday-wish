@@ -198,7 +198,7 @@ export default function PhotoGallery({ birthday, onNext }) {
         </motion.div>
 
         <h1
-          className="text-3xl sm:text-5xl md:text-6xl py-1 font-bold text-transparent bg-clip-text mb-2 sm:mb-4"
+          className="text-3xl sm:text-5xl md:text-6xl px-4 py-2 font-bold text-transparent bg-clip-text mb-2 sm:mb-4 inline-block max-w-full leading-tight"
           style={{
             ...gradientStyle,
             filter: `drop-shadow(0 0 25px ${primaryColor}66)`,
@@ -206,7 +206,7 @@ export default function PhotoGallery({ birthday, onNext }) {
         >
           {galleryHeading}
         </h1>
-        <p className="text-purple-200 text-sm sm:text-lg">
+        <p className="text-purple-200 text-sm sm:text-lg px-4">
           {gallerySubheading}
         </p>
       </motion.div>
