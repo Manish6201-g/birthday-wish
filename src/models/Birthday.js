@@ -19,6 +19,11 @@ const BirthdaySchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    gender: {
+      type: String,
+      enum: ["boy", "girl", "general"],
+      default: "general",
+    },
     birthdayDate: {
       type: Date,
       required: [true, "Birthday date is required"],

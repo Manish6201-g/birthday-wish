@@ -36,6 +36,7 @@ export default function CreateBirthdayPage() {
   const [formData, setFormData] = useState({
     name: "",
     nickname: "",
+    gender: "boy",
     slug: "",
     birthdayDate: new Date().toISOString().split("T")[0],
     age: 24,
@@ -375,6 +376,33 @@ export default function CreateBirthdayPage() {
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
                 />
               </div>
+
+              <div className="col-span-1 sm:col-span-2">
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Celebration Type / Avatar Preset *
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {[
+                    { id: "boy", label: "Birthday Boy 👦", desc: "King of the Day quotes & preset photos" },
+                    { id: "girl", label: "Birthday Girl 👧", desc: "Queen of the Day quotes & preset photos" },
+                    { id: "general", label: "General 🎉", desc: "Classic celebration quotes & preset photos" },
+                  ].map((g) => (
+                    <button
+                      key={g.id}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, gender: g.id })}
+                      className={`p-3.5 rounded-2xl border text-xs font-semibold flex flex-col items-center gap-1 transition-all ${
+                        formData.gender === g.id
+                          ? "bg-pink-500/20 border-pink-500 text-white shadow-lg"
+                          : "bg-white/5 border-white/10 text-purple-300 hover:bg-white/10"
+                      }`}
+                    >
+                      <span className="text-sm font-bold">{g.label}</span>
+                      <span className="text-[10px] text-purple-300/60 text-center font-normal">{g.desc}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -433,6 +461,13 @@ export default function CreateBirthdayPage() {
               <Camera className="w-5 h-5" />
               <span>Memories & Photo Gallery</span>
             </h2>
+
+            <div className="bg-pink-500/10 border border-pink-500/30 rounded-2xl p-4 text-xs text-purple-200 leading-relaxed flex items-start gap-3">
+              <Sparkles className="w-5 h-5 text-pink-400 shrink-0 mt-0.5" />
+              <div>
+                <span className="font-semibold text-pink-300">Don't have personal photos right now?</span> No problem! If you don't upload photos, the website will automatically showcase curated <span className="text-white font-semibold">Birthday Boy 👦</span> or <span className="text-white font-semibold">Birthday Girl 👧</span> photos and inspirational birthday lines!
+              </div>
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-purple-200 mb-3">

@@ -17,18 +17,81 @@ export default function PhotoGallery({ birthday, onNext }) {
     backgroundImage: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
   };
 
-  const defaultPhotos = [
-    { id: 1, url: "/images/1.jpeg", caption: `Beautiful moments with ${birthday?.name || "you"}` },
-    { id: 2, url: "/images/2.jpeg", caption: "Cherished memories" },
-    { id: 3, url: "/images/3.jpeg", caption: "Unforgettable times" },
-    { id: 4, url: "/images/4.jpeg", caption: "Smiles and joy" },
-    { id: 5, url: "/images/5.jpeg", caption: "Special moments together" },
+  const boyPhotos = [
+    {
+      id: "boy-1",
+      url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",
+      caption: `The King of the Day! 👑 Keep shining bright & chasing your big dreams, ${birthday?.name || "Champ"}!`,
+    },
+    {
+      id: "boy-2",
+      url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800",
+      caption: "Capturing moments of pure joy, courage, strength, and endless laughter 🌟",
+    },
+    {
+      id: "boy-3",
+      url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800",
+      caption: "A true legend celebrating another awesome year of greatness and success 🎉",
+    },
+    {
+      id: "boy-4",
+      url: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800",
+      caption: "Spreading good vibes, positive energy, and happiness everywhere you go 🎈",
+    },
+    {
+      id: "boy-5",
+      url: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800",
+      caption: `May your year ahead be as extraordinary and awesome as you are! 🎂✨`,
+    },
   ];
+
+  const girlPhotos = [
+    {
+      id: "girl-1",
+      url: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800",
+      caption: `The Queen of the Day! 👑 Radiating beauty, elegance, and pure happiness, ${birthday?.name || "Queen"}!`,
+    },
+    {
+      id: "girl-2",
+      url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=800",
+      caption: "A heart full of gold and a magical smile that lights up the whole world ✨",
+    },
+    {
+      id: "girl-3",
+      url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=800",
+      caption: "Celebrating a wonderful soul that brings warmth, love, and sunshine to everyone 💖",
+    },
+    {
+      id: "girl-4",
+      url: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=800",
+      caption: "Creating beautiful memories and spreading sweetness and positivity every day 🎉",
+    },
+    {
+      id: "girl-5",
+      url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",
+      caption: "Wishing you a lifetime filled with endless love, laughter, and sparkles 🎂🌸",
+    },
+  ];
+
+  const generalPhotos = [
+    { id: 1, url: "/images/1.jpeg", caption: `Beautiful moments & timeless smiles with ${birthday?.name || "you"} ✨` },
+    { id: 2, url: "/images/2.jpeg", caption: "A celebration of a truly wonderful and special soul 🌟" },
+    { id: 3, url: "/images/3.jpeg", caption: "Unforgettable memories & endless laughter together 🎉" },
+    { id: 4, url: "/images/4.jpeg", caption: "Here's to another amazing year of love, success, and joy 🎂" },
+    { id: 5, url: "/images/5.jpeg", caption: "May all your dreams and wishes come true today and always 💕" },
+  ];
+
+  const selectedPreset =
+    birthday?.gender === "boy"
+      ? boyPhotos
+      : birthday?.gender === "girl"
+      ? girlPhotos
+      : generalPhotos;
 
   const photosList =
     birthday?.photos && birthday.photos.length > 0
       ? birthday.photos
-      : defaultPhotos;
+      : selectedPreset;
 
   const getOptimizedSrc = (photo) => {
     const rawSrc = typeof photo === "string" ? photo : (photo.url || photo.src || "/placeholder.svg");
