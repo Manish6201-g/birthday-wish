@@ -90,6 +90,11 @@ export default function BirthdayView({ birthday }) {
         }}
       />
 
+      {/* Interactive Background Floating Particles */}
+      {!isLoading && (
+        <FloatingElements type={birthday?.floatingElementType || "mixed"} />
+      )}
+
       <AnimatePresence mode="wait">
         {isLoading ? (
           <Loader key="loader" birthday={birthday} />
@@ -97,11 +102,6 @@ export default function BirthdayView({ birthday }) {
           <AnimatePresence mode="wait">{screens[currentScreen]}</AnimatePresence>
         )}
       </AnimatePresence>
-
-      {/* Interactive Screen Floating Particles */}
-      {!isLoading && (
-        <FloatingElements type={birthday?.floatingElementType || "mixed"} />
-      )}
 
       {/* Floating Background Music Player */}
       <MusicPlayer musicConfig={birthday?.music} />

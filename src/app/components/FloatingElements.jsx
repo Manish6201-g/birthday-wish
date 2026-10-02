@@ -31,7 +31,7 @@ export default function FloatingElements({ type = "mixed" }) {
   }, [type, selectedIcons]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-30 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-80">
       {floatingItems.map((item) => (
         <motion.div
           key={item.id}
