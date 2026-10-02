@@ -45,6 +45,31 @@ export default function PhotoGallery({ birthday, onNext }) {
       url: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800",
       caption: `🎂 May your year ahead be filled with big wins, grand adventures, and pure happiness! ✨`,
     },
+    {
+      id: "boy-6",
+      url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800",
+      caption: `⚡ Courageous, charismatic, and always leading with confidence — keep rocking, ${name}!`,
+    },
+    {
+      id: "boy-7",
+      url: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800",
+      caption: "🔥 Turning everyday moments into awesome stories — cheers to your special day!",
+    },
+    {
+      id: "boy-8",
+      url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800",
+      caption: "🏆 A true champion of life who inspires everyone around him with his loyalty and drive.",
+    },
+    {
+      id: "boy-9",
+      url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800",
+      caption: "💫 Never stop dreaming big and soaring high — the world is yours to conquer!",
+    },
+    {
+      id: "boy-10",
+      url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",
+      caption: `🎁 Celebrating the legend yourself — may all your goals and wishes come true!`,
+    },
   ];
 
   const girlPhotos = [
@@ -73,6 +98,31 @@ export default function PhotoGallery({ birthday, onNext }) {
       url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",
       caption: "🎂 Wishing you a year ahead overflowing with love, laughter, and endless sparkles! 🌸",
     },
+    {
+      id: "girl-6",
+      url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=800",
+      caption: `💃 Elegant, fierce, and wonderfully unique — keep blooming into your best self, ${name}!`,
+    },
+    {
+      id: "girl-7",
+      url: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800",
+      caption: "💎 A rare gem whose kindness, intelligence, and charm light up every room.",
+    },
+    {
+      id: "girl-8",
+      url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=800",
+      caption: "🌟 May your birthday be as enchanting, bright, and extraordinary as your heart!",
+    },
+    {
+      id: "girl-9",
+      url: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=800",
+      caption: "🦋 Spread your wings, follow your passion, and write the most magical chapter yet!",
+    },
+    {
+      id: "girl-10",
+      url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",
+      caption: "🌷 Here’s to laughter, love, and unforgettable moments — Happy Birthday Queen!",
+    },
   ];
 
   const generalPhotos = [
@@ -81,6 +131,11 @@ export default function PhotoGallery({ birthday, onNext }) {
     { id: 3, url: "/images/3.jpeg", caption: "🎉 Another year wiser, bolder, and more wonderful — cheers to your special day!" },
     { id: 4, url: "/images/4.jpeg", caption: "🎈 May your journey ahead be blessed with happiness, peace, and endless reasons to smile." },
     { id: 5, url: "/images/5.jpeg", caption: "🎂 Wishing you a birthday as magnificent and extraordinary as your spirit! 💕" },
+    { id: 6, url: "/images/1.jpeg", caption: "✨ May your life be filled with moments that make your soul dance and heart sing!" },
+    { id: 7, url: "/images/2.jpeg", caption: "🌈 Bringing sunshine, positivity, and beautiful energy to everyone around you." },
+    { id: 8, url: "/images/3.jpeg", caption: "⭐ Keep shining your bright light — the best is yet to come!" },
+    { id: 9, url: "/images/4.jpeg", caption: "🌻 Celebrating your uniqueness, your strength, and your beautiful journey!" },
+    { id: 10, url: "/images/5.jpeg", caption: "🎁 Wishing you 365 new days of joy, peace, success, and pure magic!" },
   ];
 
   const selectedPreset =
@@ -190,9 +245,11 @@ export default function PhotoGallery({ birthday, onNext }) {
             const defaultCaption = selectedPreset[index % selectedPreset.length]?.caption || "";
             const rawCaption = typeof photo === "string" ? "" : (photo.caption || "");
             const hasCustomCaption = rawCaption.trim() !== "";
-            const isSoloMode = (birthday?.galleryType || "solo") === "solo";
-            const isGenericMemoryWith = isSoloMode && /^memor(y|ies)\s+with/i.test(rawCaption.trim());
-            const displayCaption = (hasCustomCaption && !isGenericMemoryWith) ? rawCaption : defaultCaption;
+            const isSoloMode = (birthday?.galleryType || "solo") !== "together";
+            const containsMemoryWith = /memor(y|ies)\s+with/i.test(rawCaption.trim());
+            const isGenericCaption = !hasCustomCaption || containsMemoryWith;
+
+            const displayCaption = (isSoloMode && isGenericCaption) ? defaultCaption : (hasCustomCaption ? rawCaption : defaultCaption);
 
             return (
               <SwiperSlide
