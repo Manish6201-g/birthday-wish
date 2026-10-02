@@ -44,6 +44,8 @@ export default function CreateBirthdayPage() {
     subtitle: "The countdown is over... Let's celebrate! 🎉",
     welcomeMessage: "🎉 It's your special day! 🎉",
     celebrationMessage: "Click to start the magic! ✨",
+    galleryTitle: "Celebration Gallery",
+    gallerySubtitle: "Capturing beautiful moments & bright smiles 📸",
     letter: {
       greeting: "My Dearest Friend,",
       content:
@@ -461,6 +463,34 @@ export default function CreateBirthdayPage() {
               <Camera className="w-5 h-5" />
               <span>Memories & Photo Gallery</span>
             </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Gallery Heading Title
+                </label>
+                <input
+                  type="text"
+                  value={formData.galleryTitle}
+                  onChange={(e) => setFormData({ ...formData, galleryTitle: e.target.value })}
+                  placeholder="Celebration Gallery / Photos of Rahul"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">
+                  Gallery Subtitle / Message
+                </label>
+                <input
+                  type="text"
+                  value={formData.gallerySubtitle}
+                  onChange={(e) => setFormData({ ...formData, gallerySubtitle: e.target.value })}
+                  placeholder="Capturing beautiful moments & bright smiles 📸"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder-purple-300/30 focus:outline-none focus:border-pink-500/60 transition-all text-sm"
+                />
+              </div>
+            </div>
 
             <div className="bg-pink-500/10 border border-pink-500/30 rounded-2xl p-4 text-xs text-purple-200 leading-relaxed flex items-start gap-3">
               <Sparkles className="w-5 h-5 text-pink-400 shrink-0 mt-0.5" />

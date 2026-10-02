@@ -133,10 +133,10 @@ export default function PhotoGallery({ birthday, onNext }) {
             filter: `drop-shadow(0 0 25px ${primaryColor}66)`,
           }}
         >
-          Moments with You
+          {birthday?.galleryTitle || "Celebration Gallery"}
         </h1>
         <p className="text-purple-200 text-sm sm:text-lg">
-          Beautiful memories with {birthday?.name || "you"} 📸
+          {birthday?.gallerySubtitle || `Capturing beautiful moments & bright smiles 📸`}
         </p>
       </motion.div>
 

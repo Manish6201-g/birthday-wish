@@ -48,6 +48,14 @@ const BirthdaySchema = new mongoose.Schema(
       type: String,
       default: "Click to start the magic! ✨",
     },
+    galleryTitle: {
+      type: String,
+      default: "Celebration Gallery",
+    },
+    gallerySubtitle: {
+      type: String,
+      default: "Capturing beautiful moments & bright smiles 📸",
+    },
     letter: {
       greeting: { type: String, default: "My Dearest Friend," },
       content: { type: String, default: "" },
