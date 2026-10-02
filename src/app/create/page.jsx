@@ -201,10 +201,12 @@ export default function CreateBirthdayPage() {
   const handleNameChange = (e) => {
     const val = e.target.value;
     const generatedSlug = val.toLowerCase().trim().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
+    const generated = generatePresetContent(formData.gender, formData.galleryType, val);
     setFormData((prev) => ({
       ...prev,
       name: val,
       slug: prev.slug === "" || prev.slug === prev.name.toLowerCase().replace(/[^a-z0-9]/g, "-") ? generatedSlug : prev.slug,
+      ...generated,
     }));
   };
 

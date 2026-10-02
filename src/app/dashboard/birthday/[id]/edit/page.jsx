@@ -125,6 +125,17 @@ export default function EditBirthdayPage({ params }) {
     fetchBirthdayDetails();
   }, [id]);
 
+  const handleNameChange = (e) => {
+    const val = e.target.value;
+    if (!formData) return;
+    const generated = generatePresetContent(formData.gender || "boy", formData.galleryType || "solo", val);
+    setFormData((prev) => ({
+      ...prev,
+      name: val,
+      ...generated,
+    }));
+  };
+
   const handleGenderSelect = (newGender) => {
     if (!formData) return;
     const generated = generatePresetContent(newGender, formData.galleryType || "solo", formData.name || "");
@@ -394,7 +405,7 @@ export default function EditBirthdayPage({ params }) {
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={handleNameChange}
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-pink-500/60 text-sm"
                 />
               </div>
