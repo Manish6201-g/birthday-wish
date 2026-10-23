@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/mongodb";
 import User from "@/models/User";
-import { comparePassword, signToken, setAuthCookie } from "@/lib/auth";
+import { comparePassword, signToken } from "@/lib/auth";
+
+const COOKIE_NAME = "birthday_token";
 
 export async function POST(request) {
   try {
@@ -40,12 +42,22 @@ export async function POST(request) {
     }
 
     const token = signToken({ id: user._id, email: user.email, name: user.name });
-    await setAuthCookie(token);
 
-    return NextResponse.json({
+    // Set cookie directly on the response object for reliability in Next.js 16
+    const response = NextResponse.json({
       user: { id: user._id, name: user.name, email: user.email },
       message: "Login successful",
     });
+
+    response.cookies.set(COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
+    });
+
+    return response;
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(

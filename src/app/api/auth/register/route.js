@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/mongodb";
 import User from "@/models/User";
-import { hashPassword, signToken, setAuthCookie } from "@/lib/auth";
+import { hashPassword, signToken } from "@/lib/auth";
 
 const PRIMARY_ADMIN_EMAIL = "manish001yadav0@gmail.com";
+const COOKIE_NAME = "birthday_token";
 
 export async function POST(request) {
   try {
@@ -73,12 +74,22 @@ export async function POST(request) {
     });
 
     const token = signToken({ id: user._id, email: user.email, name: user.name, role: user.role, canCreate: user.canCreate });
-    await setAuthCookie(token);
 
-    return NextResponse.json({
+    // Set cookie directly on the response object for reliability in Next.js 16
+    const response = NextResponse.json({
       user: { id: user._id, name: user.name, email: user.email, role: user.role, canCreate: user.canCreate },
       message: "Registration successful",
     });
+
+    response.cookies.set(COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
+    });
+
+    return response;
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json(

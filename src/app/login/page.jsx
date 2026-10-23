@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, Cake, Eye, EyeOff, ShieldCheck } from "lucide-react";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +35,8 @@ export default function LoginPage() {
         throw new Error(data.error || "Login failed. Please check your credentials.");
       }
 
-      router.push("/dashboard");
+      // Navigate to the intended destination (or dashboard as default)
+      router.push(redirectTo);
       router.refresh();
     } catch (err) {
       setError(err.message);
@@ -171,5 +174,19 @@ export default function LoginPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-purple-950 via-black to-purple-950 flex items-center justify-center">
+          <Cake className="w-12 h-12 text-pink-400 animate-bounce" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
